@@ -14,6 +14,10 @@ class UserRepository {
         return await User.create(data);
     }
 
+    async createMany(users) {
+        return await User.insertMany(users);
+    }
+
     async update(id, data) {
         return await User.findByIdAndUpdate(id, data, { new: true });
     }
