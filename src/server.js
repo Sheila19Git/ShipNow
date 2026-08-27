@@ -1,13 +1,19 @@
 const app = require("./app");
 const connectDB = require("./config/database");
 const config = require("./config/env.config");
+const logger = require("./config/logger");
 
 const startServer = async () => {
-    await connectDB();
+    try {
+        await connectDB();
 
-    app.listen(config.PORT, () => {
-        console.log(`Servidor corriendo en el puerto ${config.PORT}`);
-    });
+        app.listen(config.PORT, () => {
+            logger.info(`Servidor ShipNow escuchando en el puerto ${config.PORT}`);
+        });
+    } catch (error) {
+        logger.fatal(`No se pudo iniciar el servidor: ${error.message}`);
+        process.exit(1);
+    }
 };
 
 startServer();

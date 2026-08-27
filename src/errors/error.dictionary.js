@@ -28,7 +28,7 @@ const ERROR_DICTIONARY = Object.freeze({
     INVALID_USER_DATA: {
     statusCode: 400,
     message: "El nombre y el email son obligatorios"
-},
+    },
 
     INTERNAL_SERVER_ERROR: {
         statusCode: 500,

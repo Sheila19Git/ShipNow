@@ -13,6 +13,7 @@ const orderRepository = require("../repositories/order.repository");
 const deliveryRepository = require("../repositories/delivery.repository");
 
 const { InvalidMockQuantityError } = require("../errors/domain.errors");
+const logger = require("../config/logger");
 
 class MockService {
 
@@ -20,6 +21,7 @@ class MockService {
         const quantity = Number(qty);
 
         if (!Number.isInteger(quantity) || quantity <= 0) {
+            logger.warning(`Cantidad de mocks inválida: ${qty}`);
             throw new InvalidMockQuantityError();
         }
 
@@ -28,29 +30,37 @@ class MockService {
 
     getMockCouriers(qty = 1) {
         const quantity = this.validateQuantity(qty);
+        logger.info(`Generando ${quantity} repartidores simulados`);
         return generateCouriers(quantity);
     }
 
     getMockOrders(qty = 1) {
         const quantity = this.validateQuantity(qty);
+        logger.info(`Generando ${quantity} pedidos simulados`);
         return generateOrders(quantity);
     }
 
     getMockDeliveries(qty = 1) {
         const quantity = this.validateQuantity(qty);
+        logger.info(`Generando ${quantity} entregas simuladas`);
         return generateDeliveries(quantity);
     }
 
     getMockUsers(qty = 1) {
         const quantity = this.validateQuantity(qty);
+        logger.info(`Generando ${quantity} usuarios simulados`);
         return generateUsers(quantity);
     }
 
     async seedUsers(qty = 1) {
         const quantity = this.validateQuantity(qty);
 
+        logger.info(`Generando ${quantity} usuarios para MongoDB`);
+
         const users = generateUsers(quantity);
         const inserted = await userRepository.createMany(users);
+
+        logger.info(`${inserted.length} usuarios cargados correctamente en MongoDB`);
 
         return {
             insertados: inserted.length,
@@ -61,7 +71,10 @@ class MockService {
     async seedMockData(qty = 1) {
         const quantity = this.validateQuantity(qty);
 
+        logger.info(`Generando ${quantity} registros de prueba`);
+
         const users = generateUsers(quantity);
+
         const insertedUsers = await userRepository.createMany(users);
 
         const courierUsersData = generateUsers(
@@ -103,6 +116,10 @@ class MockService {
 
         const insertedDeliveries =
             await deliveryRepository.createMany(deliveriesWithRelations);
+
+        logger.info(
+            `Mock generado correctamente: ${insertedUsers.length} usuarios, ${insertedCouriers.length} repartidores, ${insertedOrders.length} pedidos y ${insertedDeliveries.length} entregas`
+        );
 
         return {
             usuarios: insertedUsers.length,
