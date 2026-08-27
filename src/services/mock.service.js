@@ -12,37 +12,44 @@ const courierRepository = require("../repositories/courier.repository");
 const orderRepository = require("../repositories/order.repository");
 const deliveryRepository = require("../repositories/delivery.repository");
 
+const { InvalidMockQuantityError } = require("../errors/domain.errors");
 
 class MockService {
 
-getMockCouriers(qty = 1) {
+    validateQuantity(qty) {
+        const quantity = Number(qty);
 
-    return generateCouriers(Number(qty));
+        if (!Number.isInteger(quantity) || quantity <= 0) {
+            throw new InvalidMockQuantityError();
+        }
 
-}
-
-
-getMockOrders(qty = 1) {
-
-    return generateOrders(Number(qty));
-
-}
-
-
-getMockDeliveries(qty = 1) {
-
-    return generateDeliveries(Number(qty));
-
-}
-    getMockUsers(qty = 1) {
-        return generateUsers(Number(qty));
+        return quantity;
     }
 
+    getMockCouriers(qty = 1) {
+        const quantity = this.validateQuantity(qty);
+        return generateCouriers(quantity);
+    }
+
+    getMockOrders(qty = 1) {
+        const quantity = this.validateQuantity(qty);
+        return generateOrders(quantity);
+    }
+
+    getMockDeliveries(qty = 1) {
+        const quantity = this.validateQuantity(qty);
+        return generateDeliveries(quantity);
+    }
+
+    getMockUsers(qty = 1) {
+        const quantity = this.validateQuantity(qty);
+        return generateUsers(quantity);
+    }
 
     async seedUsers(qty = 1) {
+        const quantity = this.validateQuantity(qty);
 
-        const users = generateUsers(Number(qty));
-
+        const users = generateUsers(quantity);
         const inserted = await userRepository.createMany(users);
 
         return {
@@ -51,63 +58,41 @@ getMockDeliveries(qty = 1) {
         };
     }
 
-
     async seedMockData(qty = 1) {
+        const quantity = this.validateQuantity(qty);
 
-        qty = Number(qty);
-
-
-        // 1 - Usuarios normales
-        const users = generateUsers(qty);
-
+        const users = generateUsers(quantity);
         const insertedUsers = await userRepository.createMany(users);
 
-
-
-        // 2 - Usuarios repartidores
         const courierUsersData = generateUsers(
-            qty,
+            quantity,
             USER_ROLES.COURIER
         );
 
         const insertedCourierUsers =
             await userRepository.createMany(courierUsersData);
 
-
-
-        // 3 - Crear couriers relacionados con sus usuarios
-        const courierData = generateCouriers(qty);
-
+        const courierData = generateCouriers(quantity);
 
         const couriersWithUser = courierData.map((courier, index) => ({
             ...courier,
             user: insertedCourierUsers[index]._id
         }));
 
-
         const insertedCouriers =
             await courierRepository.createMany(couriersWithUser);
 
-
-
-        // 4 - Crear pedidos relacionados con usuarios
-        const ordersData = generateOrders(qty);
-
+        const ordersData = generateOrders(quantity);
 
         const ordersWithUser = ordersData.map((order, index) => ({
             ...order,
             user: insertedUsers[index % insertedUsers.length]._id
         }));
 
-
         const insertedOrders =
             await orderRepository.createMany(ordersWithUser);
 
-
-
-        // 5 - Crear entregas relacionadas con pedidos y couriers
-        const deliveriesData = generateDeliveries(qty);
-
+        const deliveriesData = generateDeliveries(quantity);
 
         const deliveriesWithRelations =
             deliveriesData.map((delivery, index) => ({
@@ -116,11 +101,8 @@ getMockDeliveries(qty = 1) {
                 courier: insertedCouriers[index % insertedCouriers.length]._id
             }));
 
-
         const insertedDeliveries =
             await deliveryRepository.createMany(deliveriesWithRelations);
-
-
 
         return {
             usuarios: insertedUsers.length,
@@ -128,10 +110,7 @@ getMockDeliveries(qty = 1) {
             pedidos: insertedOrders.length,
             entregas: insertedDeliveries.length
         };
-
     }
-
 }
-
 
 module.exports = new MockService();

@@ -1,5 +1,10 @@
 const userRepository = require("../repositories/user.repository");
 
+const {
+    UserNotFoundError,
+    InvalidUserDataError
+} = require("../errors/domain.errors");
+
 class UserService {
 
     async getAllUsers() {
@@ -7,26 +12,42 @@ class UserService {
     }
 
     async getUserById(id) {
-        return await userRepository.getById(id);
+        const user = await userRepository.getById(id);
+
+        if (!user) {
+            throw new UserNotFoundError();
+        }
+
+        return user;
     }
 
     async createUser(data) {
-
         if (!data.name || !data.email) {
-            throw new Error("El nombre y el email son obligatorios");
+            throw new InvalidUserDataError();
         }
 
         return await userRepository.create(data);
     }
 
     async updateUser(id, data) {
-        return await userRepository.update(id, data);
+        const user = await userRepository.update(id, data);
+
+        if (!user) {
+            throw new UserNotFoundError();
+        }
+
+        return user;
     }
 
     async deleteUser(id) {
-        return await userRepository.delete(id);
-    }
+        const user = await userRepository.delete(id);
 
+        if (!user) {
+            throw new UserNotFoundError();
+        }
+
+        return user;
+    }
 }
 
 module.exports = new UserService();

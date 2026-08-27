@@ -1,149 +1,113 @@
-# ShipNow API
+## Módulo 3 - Manejo profesional de errores
 
-## Descripción
+En esta etapa se incorporó un sistema centralizado de manejo de errores para evitar respuestas de error aisladas en los controllers.
 
-Este proyecto consiste en una API desarrollada con Node.js, Express y MongoDB. Durante el desarrollo se reorganizó el proyecto utilizando una arquitectura por capas para separar las responsabilidades del código y hacerlo más claro y fácil de mantener.
+La gestión de errores está compuesta por:
 
-Además, se incorporó un sistema de mocking para generar datos de prueba de usuarios, repartidores, pedidos y entregas, permitiendo probar la aplicación sin depender de datos reales cargados manualmente.
+- **Errores personalizados:** representan situaciones específicas del dominio, como usuario inexistente, pedido no encontrado, estado inválido, cantidad inválida de mocks y datos inválidos.
+- **Diccionario de errores:** centraliza los códigos, mensajes y códigos de estado HTTP.
+- **Middleware global:** recibe los errores mediante `next(error)` y genera la respuesta HTTP final.
 
-## Tecnologías utilizadas
+Los controllers no responden directamente los errores. Cuando ocurre un error, lo derivan al middleware global.
 
-* Node.js
-* Express
-* MongoDB Atlas
-* Mongoose
-* Dotenv
-* Nodemon
-* Faker
+### Estructura de respuesta de error
 
-## Cómo ejecutar el proyecto
-
-1. Clonar el repositorio.
-
-2. Instalar las dependencias con:
-
-```bash
-npm install
-```
-
-3. Crear un archivo `.env` tomando como ejemplo el archivo `.env.example`.
-
-4. Completar las siguientes variables:
-
-```env
-PORT=
-MONGODB_URI=
-NODE_ENV=
-```
-
-5. Iniciar el servidor con:
-
-```bash
-npm run dev
-```
-
-## Organización del proyecto
-
-El proyecto está organizado en diferentes carpetas para que cada una tenga una función específica:
-
-* **Controllers:** reciben las peticiones y envían las respuestas.
-* **Services:** contienen la lógica del negocio.
-* **Repositories:** realizan las consultas e inserciones en la base de datos.
-* **Models:** definen la estructura de los datos.
-* **Routes:** conectan las rutas con los controladores.
-* **Config:** contiene la configuración del proyecto.
-* **Utils:** contiene funciones auxiliares, como los generadores de datos simulados.
-
-## ¿Por qué separé Service y Repository?
-
-Decidí separar estas capas para que cada una tenga una única responsabilidad.
-
-El **Repository** se encarga únicamente de acceder a la base de datos, mientras que el **Service** contiene la lógica del proyecto, como las validaciones y el procesamiento de la información antes de devolverla al cliente.
-
-De esta manera el código queda más organizado, es más fácil de entender y resulta más sencillo realizar modificaciones en el futuro.
-
-## Módulo 2 - Mocking y carga de datos de prueba
-
-En esta etapa se incorporó un sistema de mocking para generar datos de prueba de usuarios, repartidores, pedidos y entregas.
-
-Los datos pueden generarse de dos formas:
-
-* Generando datos simulados sin guardarlos en la base de datos.
-* Insertando datos de prueba en MongoDB manteniendo las relaciones entre las entidades.
-
-El módulo de mocking mantiene la misma arquitectura por capas del proyecto:
-
-* **Routes:** contienen las rutas disponibles para generar mocks.
-* **Controllers:** reciben las solicitudes y devuelven las respuestas.
-* **Services:** contienen la lógica para generar y relacionar los datos.
-* **Repositories:** se encargan de insertar la información en MongoDB.
-* **Utils:** contiene los generadores de datos simulados.
-
-## Endpoints de Mocking
-
-### Generar usuarios simulados
-
-Genera usuarios de prueba sin guardarlos en la base de datos.
-
-```
-GET /api/mocks/users?qty=3
-```
-
-### Generar repartidores simulados
-
-Genera repartidores de prueba.
-
-```
-GET /api/mocks/couriers?qty=3
-```
-
-### Generar pedidos simulados
-
-Genera pedidos de prueba respetando los estados y prioridades permitidos.
-
-```
-GET /api/mocks/orders?qty=3
-```
-
-### Generar entregas simuladas
-
-Genera entregas de prueba.
-
-```
-GET /api/mocks/deliveries?qty=3
-```
-
-### Cargar datos de prueba en MongoDB
-
-Este endpoint permite insertar datos simulados en la base de datos.
-
-```
-POST /api/mocks/seed?qty=10
-```
-
-La carga genera usuarios, repartidores, pedidos y entregas relacionados entre sí.
-
-Ejemplo de respuesta:
+Todas las respuestas de error utilizan una estructura uniforme:
 
 ```json
 {
-    "usuarios": 10,
-    "repartidores": 10,
-    "pedidos": 10,
-    "entregas": 10
+    "status": "error",
+    "code": "CODIGO_DEL_ERROR",
+    "message": "Descripción del error"
 }
 ```
 
-## Variables de entorno
+### Ejemplo: usuario inexistente
 
-El proyecto utiliza las siguientes variables de entorno:
+Request:
 
-* PORT
-* MONGODB_URI
-* NODE_ENV
+```http
+GET /api/users/000000000000000000000000
+```
 
-Si alguna de estas variables no está definida, la aplicación muestra un error y no inicia.
+Response:
+
+```json
+{
+    "status": "error",
+    "code": "USER_NOT_FOUND",
+    "message": "Usuario no encontrado"
+}
+```
+
+Código HTTP: `404`
+
+### Ejemplo: datos inválidos de usuario
+
+Request:
+
+```http
+POST /api/users
+```
+
+Body:
+
+```json
+{
+    "name": "Shei"
+}
+```
+
+Response:
+
+```json
+{
+    "status": "error",
+    "code": "INVALID_USER_DATA",
+    "message": "El nombre y el email son obligatorios"
+}
+```
+
+Código HTTP: `400`
+
+### Manejo de errores en el módulo de mocks
+
+El módulo de mocks valida que la cantidad solicitada sea un número entero mayor a 0.
+
+Por ejemplo:
+
+```http
+GET /api/mocks/users?qty=0
+```
+
+Response:
+
+```json
+{
+    "status": "error",
+    "code": "INVALID_MOCK_QUANTITY",
+    "message": "La cantidad de mocks debe ser un número entero mayor a 0"
+}
+```
+
+Código HTTP: `400`
+
+También se controlan cantidades negativas, decimales y otros valores inválidos.
+
+Las fallas producidas durante la carga de datos en MongoDB son derivadas al middleware global y reciben una respuesta de error interno con código HTTP `500`.
+
+### Pruebas realizadas
+
+Se verificó el funcionamiento del sistema mediante distintos casos:
+
+- Cantidad de mocks igual a `0`.
+- Cantidades negativas.
+- Cantidades no enteras.
+- Datos inválidos al crear usuarios.
+- Datos inválidos al crear productos.
+- Búsqueda de un usuario inexistente.
+- Generación correcta de mocks con cantidades válidas.
 
 ## Autor
 
-Proyecto realizado por Sheila Magali Chiesa como preentrega del Módulo 2.
+Proyecto realizado por Sheila Magali Chiesa como preentrega de los Módulos 2 y 3.
