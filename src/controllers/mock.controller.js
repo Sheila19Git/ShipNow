@@ -4,9 +4,18 @@ class MockController {
 
     getCouriers(req, res, next) {
         try {
-            const qty = req.query.qty || 1;
+            const qty = Number(req.query.qty || 1);
+
+            if (!Number.isInteger(qty) || qty < 1) {
+                const error = new Error("Cantidad de mocks inválida");
+                error.statusCode = 400;
+                error.code = "INVALID_MOCK_QTY";
+                throw error;
+            }
+
             const couriers = mockService.getMockCouriers(qty);
-            res.json(couriers);
+
+            res.status(200).json(couriers);
         } catch (error) {
             next(error);
         }
@@ -14,9 +23,18 @@ class MockController {
 
     getOrders(req, res, next) {
         try {
-            const qty = req.query.qty || 1;
+            const qty = Number(req.query.qty || 1);
+
+            if (!Number.isInteger(qty) || qty < 1) {
+                const error = new Error("Cantidad de mocks inválida");
+                error.statusCode = 400;
+                error.code = "INVALID_MOCK_QTY";
+                throw error;
+            }
+
             const orders = mockService.getMockOrders(qty);
-            res.json(orders);
+
+            res.status(200).json(orders);
         } catch (error) {
             next(error);
         }
@@ -24,9 +42,18 @@ class MockController {
 
     getDeliveries(req, res, next) {
         try {
-            const qty = req.query.qty || 1;
+            const qty = Number(req.query.qty || 1);
+
+            if (!Number.isInteger(qty) || qty < 1) {
+                const error = new Error("Cantidad de mocks inválida");
+                error.statusCode = 400;
+                error.code = "INVALID_MOCK_QTY";
+                throw error;
+            }
+
             const deliveries = mockService.getMockDeliveries(qty);
-            res.json(deliveries);
+
+            res.status(200).json(deliveries);
         } catch (error) {
             next(error);
         }
@@ -34,9 +61,18 @@ class MockController {
 
     getUsers(req, res, next) {
         try {
-            const qty = req.query.qty || 1;
+            const qty = Number(req.query.qty || 1);
+
+            if (!Number.isInteger(qty) || qty < 1) {
+                const error = new Error("Cantidad de mocks inválida");
+                error.statusCode = 400;
+                error.code = "INVALID_MOCK_QTY";
+                throw error;
+            }
+
             const users = mockService.getMockUsers(qty);
-            res.json(users);
+
+            res.status(200).json(users);
         } catch (error) {
             next(error);
         }
@@ -44,8 +80,17 @@ class MockController {
 
     async seedUsers(req, res, next) {
         try {
-            const qty = req.query.qty || 1;
+            const qty = Number(req.query.qty || 1);
+
+            if (!Number.isInteger(qty) || qty < 1) {
+                const error = new Error("Cantidad de mocks inválida");
+                error.statusCode = 400;
+                error.code = "INVALID_MOCK_QTY";
+                throw error;
+            }
+
             const result = await mockService.seedUsers(qty);
+
             res.status(201).json(result);
         } catch (error) {
             next(error);
@@ -54,8 +99,17 @@ class MockController {
 
     async seedMockData(req, res, next) {
         try {
-            const qty = req.query.qty || 1;
+            const qty = Number(req.query.qty || 1);
+
+            if (!Number.isInteger(qty) || qty < 1) {
+                const error = new Error("Cantidad de mocks inválida");
+                error.statusCode = 400;
+                error.code = "INVALID_MOCK_QTY";
+                throw error;
+            }
+
             const result = await mockService.seedMockData(qty);
+
             res.status(201).json(result);
         } catch (error) {
             next(error);
