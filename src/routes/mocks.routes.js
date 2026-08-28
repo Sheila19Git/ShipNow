@@ -34,7 +34,7 @@ const mockController = require("../controllers/mock.controller");
  *         content:
  *           application/json:
  *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *               $ref: "#/components/schemas/MockQuantityError"
  */
 router.get("/users", mockController.getUsers);
 
@@ -62,7 +62,7 @@ router.get("/users", mockController.getUsers);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *               $ref: "#/components/schemas/MockQuantityError"
  */
 router.get("/couriers", mockController.getCouriers);
 
@@ -90,7 +90,7 @@ router.get("/couriers", mockController.getCouriers);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *               $ref: "#/components/schemas/MockQuantityError"
  */
 router.get("/orders", mockController.getOrders);
 
@@ -118,7 +118,7 @@ router.get("/orders", mockController.getOrders);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *               $ref: "#/components/schemas/MockQuantityError"
  */
 router.get("/deliveries", mockController.getDeliveries);
 
@@ -143,8 +143,16 @@ router.get("/deliveries", mockController.getDeliveries);
  *         description: Usuarios insertados correctamente
  *       400:
  *         description: Cantidad de mocks inválida
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/MockQuantityError"
  *       500:
  *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/ErrorResponse"
  */
 router.post("/seed/users", mockController.seedUsers);
 
@@ -169,8 +177,16 @@ router.post("/seed/users", mockController.seedUsers);
  *         description: Datos mock insertados correctamente
  *       400:
  *         description: Cantidad de mocks inválida
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/MockQuantityError"
  *       500:
  *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/ErrorResponse"
  */
 router.post("/seed", mockController.seedMockData);
 

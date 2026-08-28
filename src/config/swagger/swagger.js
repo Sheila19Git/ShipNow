@@ -183,6 +183,25 @@ const options = {
                     }
                 },
 
+                MockQuantityError: {
+                    type: "object",
+                    properties: {
+                        status: {
+                            type: "string",
+                            example: "error"
+                        },
+                        code: {
+                            type: "string",
+                            example: "INVALID_MOCK_QUANTITY"
+                        },
+                        message: {
+                            type: "string",
+                            example:
+                                "La cantidad de mocks debe ser un número entero mayor a 0"
+                        }
+                    }
+                },
+
                 SuccessResponse: {
                     type: "object",
                     properties: {

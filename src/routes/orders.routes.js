@@ -25,12 +25,6 @@ const router = express.Router();
  *                   type: array
  *                   items:
  *                     $ref: "#/components/schemas/Order"
- *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  *
  *   post:
  *     summary: Crear un nuevo pedido
@@ -64,12 +58,6 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/SuccessResponse"
- *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  */
 router.get("/", (req, res) => {
     res.json({
@@ -100,10 +88,10 @@ router.post("/", (req, res) => {
  *         description: ID del pedido a buscar.
  *         schema:
  *           type: string
- *         example: "64f1a2b3c4d5e6f789012345"
+ *           example: "64f1a2b3c4d5e6f789012345"
  *     responses:
  *       200:
- *         description: Pedido obtenido correctamente.
+ *         description: Pedido consultado correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -113,13 +101,8 @@ router.post("/", (req, res) => {
  *                   type: string
  *                   example: success
  *                 payload:
- *                   $ref: "#/components/schemas/Order"
- *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *                   type: object
+ *                   example: {}
  */
 router.get("/:id", (req, res) => {
     res.json({

@@ -25,12 +25,6 @@ const router = express.Router();
  *                   type: array
  *                   items:
  *                     $ref: "#/components/schemas/Delivery"
- *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  *
  *   post:
  *     summary: Crear o asignar una entrega
@@ -44,12 +38,6 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: "#/components/schemas/SuccessResponse"
- *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  */
 router.get("/", (req, res) => {
     res.json({
@@ -70,20 +58,20 @@ router.post("/", (req, res) => {
  * /api/deliveries/{id}:
  *   get:
  *     summary: Obtener una entrega por ID
- *     description: Obtiene el detalle de una entrega utilizando su ID.
+ *     description: Obtiene el identificador de una entrega utilizando su ID.
  *     tags:
  *       - Deliveries
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la entrega a buscar.
+ *         description: ID de la entrega a consultar.
  *         schema:
  *           type: string
- *         example: "64f1a2b3c4d5e6f789012345"
+ *           example: "64f1a2b3c4d5e6f789012345"
  *     responses:
  *       200:
- *         description: Entrega obtenida correctamente.
+ *         description: Identificador de la entrega obtenido correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -93,13 +81,11 @@ router.post("/", (req, res) => {
  *                   type: string
  *                   example: success
  *                 payload:
- *                   $ref: "#/components/schemas/Delivery"
- *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "64f1a2b3c4d5e6f789012345"
  */
 router.get("/:id", (req, res) => {
     res.json({
