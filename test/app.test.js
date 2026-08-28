@@ -6,8 +6,6 @@ const config = require("../src/config/env.config");
 const User = require("../src/models/User");
 
 describe("ShipNow API", () => {
-    let testUser;
-
     before(async () => {
         await mongoose.connect(config.MONGODB_URI);
     });
@@ -107,8 +105,6 @@ describe("ShipNow API", () => {
             "email",
             "test.shipnow@example.com"
         );
-
-        testUser = response.body;
     });
 
     it("POST /api/users debería devolver 400 con datos incompletos", async () => {
@@ -149,5 +145,93 @@ describe("ShipNow API", () => {
             "message",
             "Usuario no encontrado"
         );
+    });
+
+    it("GET /api/orders debería obtener la lista de pedidos", async () => {
+        const response = await request(app).get("/api/orders");
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an("object");
+        expect(response.body).to.have.property("status", "success");
+        expect(response.body).to.have.property("payload");
+        expect(response.body.payload).to.be.an("array");
+    });
+
+    it("POST /api/orders debería crear un pedido", async () => {
+        const response = await request(app)
+            .post("/api/orders")
+            .send({
+                user: new mongoose.Types.ObjectId().toString(),
+                products: [
+                    {
+                        product: new mongoose.Types.ObjectId().toString(),
+                        quantity: 1
+                    }
+                ],
+                priority: "medium"
+            });
+
+        expect(response.status).to.equal(201);
+        expect(response.body).to.be.an("object");
+        expect(response.body).to.have.property("status", "success");
+        expect(response.body).to.have.property(
+            "message",
+            "Pedido creado correctamente"
+        );
+    });
+
+    it("GET /api/orders/:id debería consultar un pedido", async () => {
+        const fakeId = new mongoose.Types.ObjectId().toString();
+
+        const response = await request(app).get(
+            `/api/orders/${fakeId}`
+        );
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an("object");
+        expect(response.body).to.have.property("status", "success");
+        expect(response.body).to.have.property("payload");
+        expect(response.body.payload).to.be.an("object");
+    });
+
+    it("GET /api/deliveries debería obtener la lista de entregas", async () => {
+        const response = await request(app).get("/api/deliveries");
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an("object");
+        expect(response.body).to.have.property("status", "success");
+        expect(response.body).to.have.property("payload");
+        expect(response.body.payload).to.be.an("array");
+    });
+
+    it("POST /api/deliveries debería crear una entrega", async () => {
+        const response = await request(app)
+            .post("/api/deliveries")
+            .send({
+                order: new mongoose.Types.ObjectId().toString(),
+                courier: new mongoose.Types.ObjectId().toString()
+            });
+
+        expect(response.status).to.equal(201);
+        expect(response.body).to.be.an("object");
+        expect(response.body).to.have.property("status", "success");
+        expect(response.body).to.have.property(
+            "message",
+            "Entrega creada"
+        );
+    });
+
+    it("GET /api/deliveries/:id debería consultar una entrega por ID", async () => {
+        const fakeId = new mongoose.Types.ObjectId().toString();
+
+        const response = await request(app).get(
+            `/api/deliveries/${fakeId}`
+        );
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an("object");
+        expect(response.body).to.have.property("status", "success");
+        expect(response.body).to.have.property("payload");
+        expect(response.body.payload).to.have.property("id", fakeId);
     });
 });
