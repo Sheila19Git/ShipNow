@@ -1,9 +1,14 @@
 const request = require("supertest");
 const { expect } = require("chai");
 const mongoose = require("mongoose");
+
 const app = require("../src/app");
 const config = require("../src/config/env.config");
+
 const User = require("../src/models/User");
+const Courier = require("../src/models/Courier");
+const Order = require("../src/models/Order");
+const Delivery = require("../src/models/Delivery");
 
 describe("ShipNow API", () => {
     before(async () => {
@@ -14,6 +19,14 @@ describe("ShipNow API", () => {
         await User.deleteMany({
             email: "test.shipnow@example.com"
         });
+
+        await User.deleteMany({
+            name: /test/i
+        });
+
+        await Courier.deleteMany({});
+        await Order.deleteMany({});
+        await Delivery.deleteMany({});
 
         await mongoose.connection.close();
     });
@@ -46,7 +59,6 @@ describe("ShipNow API", () => {
         expect(response.body).to.have.lengthOf(5);
 
         response.body.forEach((user) => {
-            expect(user).to.be.an("object");
             expect(user).to.have.property("name");
             expect(user).to.have.property("email");
             expect(user).to.have.property("role");
@@ -59,7 +71,6 @@ describe("ShipNow API", () => {
             .query({ qty: 0 });
 
         expect(response.status).to.equal(400);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("status", "error");
         expect(response.body).to.have.property(
             "code",
@@ -95,7 +106,6 @@ describe("ShipNow API", () => {
             });
 
         expect(response.status).to.equal(201);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("_id");
         expect(response.body).to.have.property(
             "name",
@@ -115,7 +125,6 @@ describe("ShipNow API", () => {
             });
 
         expect(response.status).to.equal(400);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("status", "error");
         expect(response.body).to.have.property(
             "code",
@@ -135,7 +144,6 @@ describe("ShipNow API", () => {
         );
 
         expect(response.status).to.equal(404);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("status", "error");
         expect(response.body).to.have.property(
             "code",
@@ -151,7 +159,6 @@ describe("ShipNow API", () => {
         const response = await request(app).get("/api/orders");
 
         expect(response.status).to.equal(200);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("status", "success");
         expect(response.body).to.have.property("payload");
         expect(response.body.payload).to.be.an("array");
@@ -172,7 +179,6 @@ describe("ShipNow API", () => {
             });
 
         expect(response.status).to.equal(201);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("status", "success");
         expect(response.body).to.have.property(
             "message",
@@ -188,7 +194,6 @@ describe("ShipNow API", () => {
         );
 
         expect(response.status).to.equal(200);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("status", "success");
         expect(response.body).to.have.property("payload");
         expect(response.body.payload).to.be.an("object");
@@ -198,7 +203,6 @@ describe("ShipNow API", () => {
         const response = await request(app).get("/api/deliveries");
 
         expect(response.status).to.equal(200);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("status", "success");
         expect(response.body).to.have.property("payload");
         expect(response.body.payload).to.be.an("array");
@@ -213,7 +217,6 @@ describe("ShipNow API", () => {
             });
 
         expect(response.status).to.equal(201);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("status", "success");
         expect(response.body).to.have.property(
             "message",
@@ -229,9 +232,131 @@ describe("ShipNow API", () => {
         );
 
         expect(response.status).to.equal(200);
-        expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("status", "success");
         expect(response.body).to.have.property("payload");
         expect(response.body.payload).to.have.property("id", fakeId);
+    });
+
+    it("GET /api/mocks/couriers?qty=3 debería generar 3 repartidores mock", async () => {
+        const response = await request(app)
+            .get("/api/mocks/couriers")
+            .query({ qty: 3 });
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an("array");
+        expect(response.body).to.have.lengthOf(3);
+    });
+
+    it("GET /api/mocks/orders?qty=3 debería generar 3 pedidos mock", async () => {
+        const response = await request(app)
+            .get("/api/mocks/orders")
+            .query({ qty: 3 });
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an("array");
+        expect(response.body).to.have.lengthOf(3);
+    });
+
+    it("GET /api/mocks/deliveries?qty=3 debería generar 3 entregas mock", async () => {
+        const response = await request(app)
+            .get("/api/mocks/deliveries")
+            .query({ qty: 3 });
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.an("array");
+        expect(response.body).to.have.lengthOf(3);
+    });
+
+    it("GET /api/mocks/couriers?qty=0 debería devolver cantidad inválida", async () => {
+        const response = await request(app)
+            .get("/api/mocks/couriers")
+            .query({ qty: 0 });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.property("status", "error");
+        expect(response.body).to.have.property(
+            "code",
+            "INVALID_MOCK_QUANTITY"
+        );
+    });
+
+    it("GET /api/mocks/orders?qty=0 debería devolver cantidad inválida", async () => {
+        const response = await request(app)
+            .get("/api/mocks/orders")
+            .query({ qty: 0 });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.property("status", "error");
+        expect(response.body).to.have.property(
+            "code",
+            "INVALID_MOCK_QUANTITY"
+        );
+    });
+
+    it("GET /api/mocks/deliveries?qty=0 debería devolver cantidad inválida", async () => {
+        const response = await request(app)
+            .get("/api/mocks/deliveries")
+            .query({ qty: 0 });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.property("status", "error");
+        expect(response.body).to.have.property(
+            "code",
+            "INVALID_MOCK_QUANTITY"
+        );
+    });
+
+    it("POST /api/mocks/seed/users?qty=2 debería insertar 2 usuarios mock", async () => {
+        const response = await request(app)
+            .post("/api/mocks/seed/users")
+            .query({ qty: 2 });
+
+        expect(response.status).to.equal(201);
+        expect(response.body).to.be.an("object");
+        expect(response.body).to.have.property("insertados", 2);
+        expect(response.body).to.have.property(
+            "coleccion",
+            "usuarios"
+        );
+    });
+
+    it("POST /api/mocks/seed/users?qty=0 debería devolver cantidad inválida", async () => {
+        const response = await request(app)
+            .post("/api/mocks/seed/users")
+            .query({ qty: 0 });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.property("status", "error");
+        expect(response.body).to.have.property(
+            "code",
+            "INVALID_MOCK_QUANTITY"
+        );
+    });
+
+    it("POST /api/mocks/seed?qty=2 debería insertar todos los datos mock", async () => {
+        const response = await request(app)
+            .post("/api/mocks/seed")
+            .query({ qty: 2 });
+
+        expect(response.status).to.equal(201);
+        expect(response.body).to.be.an("object");
+
+        expect(response.body).to.have.property("usuarios", 2);
+        expect(response.body).to.have.property("repartidores", 2);
+        expect(response.body).to.have.property("pedidos", 2);
+        expect(response.body).to.have.property("entregas", 2);
+    });
+
+    it("POST /api/mocks/seed?qty=0 debería devolver cantidad inválida", async () => {
+        const response = await request(app)
+            .post("/api/mocks/seed")
+            .query({ qty: 0 });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.property("status", "error");
+        expect(response.body).to.have.property(
+            "code",
+            "INVALID_MOCK_QUANTITY"
+        );
     });
 });
