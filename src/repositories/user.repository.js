@@ -22,6 +22,18 @@ class UserRepository {
         return await User.findByIdAndUpdate(id, data, { new: true });
     }
 
+    async addDocument(id, documentData) {
+        return await User.findByIdAndUpdate(
+            id,
+            {
+                $push: {
+                    documents: documentData
+                }
+            },
+            { new: true }
+        );
+    }
+
     async delete(id) {
         return await User.findByIdAndDelete(id);
     }

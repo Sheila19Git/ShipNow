@@ -30,10 +30,17 @@ const DELIVERY_STATUS = Object.freeze({
     CANCELLED: "CANCELLED"
 });
 
+const DOCUMENT_TYPES = Object.freeze({
+    DNI: "DNI",
+    LICENCIA: "LICENCIA",
+    OTRO: "OTRO"
+});
+
 module.exports = {
     USER_ROLES,
     PRODUCT_STATUS,
     ORDER_STATUS,
     ORDER_PRIORITY,
-    DELIVERY_STATUS
+    DELIVERY_STATUS,
+    DOCUMENT_TYPES
 };

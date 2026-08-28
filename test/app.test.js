@@ -11,6 +11,7 @@ const Order = require("../src/models/Order");
 const Delivery = require("../src/models/Delivery");
 
 describe("ShipNow API", () => {
+
     before(async () => {
         await mongoose.connect(config.MONGODB_URI);
     });
@@ -21,7 +22,27 @@ describe("ShipNow API", () => {
         });
 
         await User.deleteMany({
+            email: {
+                $in: [
+                    "document.test@example.com",
+                    "no.file.test@example.com",
+                    "invalid.document.test@example.com",
+                    "receipt.test@example.com",
+                    "receipt.no.file@example.com"
+                ]
+            }
+        });
+
+        await User.deleteMany({
             name: /test/i
+        });
+
+        await User.deleteMany({
+            name: /Usuario Sin Archivo/i
+        });
+
+        await User.deleteMany({
+            name: /Usuario Tipo Invalido/i
         });
 
         await Courier.deleteMany({});
@@ -359,4 +380,258 @@ describe("ShipNow API", () => {
             "INVALID_MOCK_QUANTITY"
         );
     });
+
+    it("POST /api/users/:userId/documents debería cargar un documento correctamente", async () => {
+        const user = await User.create({
+            name: "Usuario Documento Test",
+            email: "document.test@example.com",
+            role: "USER"
+        });
+
+        const response = await request(app)
+            .post(`/api/users/${user._id}/documents`)
+            .field("documentType", "DNI")
+            .attach(
+                "document",
+                Buffer.from("contenido de prueba"),
+                {
+                    filename: "documento-test.pdf",
+                    contentType: "application/pdf"
+                }
+            );
+
+        expect(response.status).to.equal(201);
+        expect(response.body).to.have.property(
+            "message",
+            "Documento cargado correctamente"
+        );
+        expect(response.body.user).to.have.property("documents");
+        expect(response.body.user.documents).to.have.lengthOf(1);
+        expect(response.body.user.documents[0]).to.have.property(
+            "documentType",
+            "DNI"
+        );
+    });
+
+    it("POST /api/users/:userId/documents debería devolver error si falta el archivo", async () => {
+        await User.deleteOne({
+            email: "no.file.test@example.com"
+        });
+
+        const user = await User.create({
+            name: "Usuario Sin Archivo",
+            email: "no.file.test@example.com",
+            role: "USER"
+        });
+
+        const response = await request(app)
+            .post(`/api/users/${user._id}/documents`)
+            .field("documentType", "DNI");
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.property(
+            "status",
+            "error"
+        );
+        expect(response.body).to.have.property(
+            "code",
+            "FILE_REQUIRED"
+        );
+    });
+
+    it("POST /api/users/:userId/documents debería devolver error con tipo de documento inválido", async () => {
+        await User.deleteOne({
+            email: "invalid.document.test@example.com"
+        });
+
+        const user = await User.create({
+            name: "Usuario Tipo Invalido",
+            email: "invalid.document.test@example.com",
+            role: "USER"
+        });
+
+        const response = await request(app)
+            .post(`/api/users/${user._id}/documents`)
+            .field("documentType", "DOCUMENTO_INEXISTENTE")
+            .attach(
+                "document",
+                Buffer.from("contenido de prueba"),
+                {
+                    filename: "documento-test.pdf",
+                    contentType: "application/pdf"
+                }
+            );
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.property(
+            "status",
+            "error"
+        );
+        expect(response.body).to.have.property(
+            "code",
+            "INVALID_DOCUMENT_TYPE"
+        );
+    });
+
+    it("POST /api/users/:userId/documents debería devolver error si el usuario no existe", async () => {
+        const fakeUserId = new mongoose.Types.ObjectId();
+
+        const response = await request(app)
+            .post(`/api/users/${fakeUserId}/documents`)
+            .field("documentType", "DNI")
+            .attach(
+                "document",
+                Buffer.from("contenido de prueba"),
+                {
+                    filename: "documento-test.pdf",
+                    contentType: "application/pdf"
+                }
+            );
+
+        expect(response.status).to.equal(404);
+        expect(response.body).to.have.property(
+            "status",
+            "error"
+        );
+        expect(response.body).to.have.property(
+            "code",
+            "USER_NOT_FOUND"
+        );
+    });
+
+    it("POST /api/deliveries/:deliveryId/receipt debería cargar un comprobante correctamente", async () => {
+        const user = await User.create({
+            name: "Usuario Receipt Test",
+            email: "receipt.test@example.com",
+            role: "USER"
+        });
+
+        const courier = await Courier.create({
+            user: user._id,
+            available: true
+        });
+
+        const order = await Order.create({
+            user: user._id,
+            products: [],
+            status: "CONFIRMED",
+            priority: "MEDIUM"
+        });
+
+        const delivery = await Delivery.create({
+            order: order._id,
+            courier: courier._id,
+            status: "ASSIGNED"
+        });
+
+        const response = await request(app)
+            .post(`/api/deliveries/${delivery._id}/receipt`)
+            .attach(
+                "receipt",
+                Buffer.from("comprobante de prueba"),
+                {
+                    filename: "comprobante-test.pdf",
+                    contentType: "application/pdf"
+                }
+            );
+
+        expect(response.status).to.equal(201);
+
+        expect(response.body).to.have.property(
+            "status",
+            "success"
+        );
+
+        expect(response.body).to.have.property(
+            "message",
+            "Comprobante cargado correctamente"
+        );
+
+        expect(response.body.delivery).to.have.property(
+            "receipt"
+        );
+
+        expect(response.body.delivery.receipt).to.have.property(
+            "originalName",
+            "comprobante-test.pdf"
+        );
+
+        expect(response.body.delivery.receipt).to.have.property(
+            "mimeType",
+            "application/pdf"
+        );
+    });
+
+    it("POST /api/deliveries/:deliveryId/receipt debería devolver error si falta el comprobante", async () => {
+        await User.deleteOne({
+            email: "receipt.no.file@example.com"
+        });
+
+        const user = await User.create({
+            name: "Usuario Receipt Sin Archivo",
+            email: "receipt.no.file@example.com",
+            role: "USER"
+        });
+
+        const courier = await Courier.create({
+            user: user._id,
+            available: true
+        });
+
+        const order = await Order.create({
+            user: user._id,
+            products: [],
+            status: "CONFIRMED",
+            priority: "MEDIUM"
+        });
+
+        const delivery = await Delivery.create({
+            order: order._id,
+            courier: courier._id,
+            status: "ASSIGNED"
+        });
+
+        const response = await request(app)
+            .post(`/api/deliveries/${delivery._id}/receipt`);
+
+        expect(response.status).to.equal(400);
+
+        expect(response.body).to.have.property(
+            "status",
+            "error"
+        );
+
+        expect(response.body).to.have.property(
+            "code",
+            "FILE_REQUIRED"
+        );
+    });
+
+    it("POST /api/deliveries/:deliveryId/receipt debería devolver error si la entrega no existe", async () => {
+        const fakeDeliveryId = new mongoose.Types.ObjectId();
+
+        const response = await request(app)
+            .post(`/api/deliveries/${fakeDeliveryId}/receipt`)
+            .attach(
+                "receipt",
+                Buffer.from("comprobante de prueba"),
+                {
+                    filename: "comprobante-test.pdf",
+                    contentType: "application/pdf"
+                }
+            );
+
+        expect(response.status).to.equal(404);
+
+        expect(response.body).to.have.property(
+            "status",
+            "error"
+        );
+
+        expect(response.body).to.have.property(
+            "code",
+            "DELIVERY_NOT_FOUND"
+        );
+    });
+
 });

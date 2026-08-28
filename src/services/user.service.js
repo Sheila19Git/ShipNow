@@ -1,8 +1,11 @@
 const userRepository = require("../repositories/user.repository");
 
+const { DOCUMENT_TYPES } = require("../constants");
+
 const {
     UserNotFoundError,
-    InvalidUserDataError
+    InvalidUserDataError,
+    InvalidDocumentTypeError
 } = require("../errors/domain.errors");
 
 class UserService {
@@ -27,6 +30,26 @@ class UserService {
         }
 
         return await userRepository.create(data);
+    }
+
+    async addDocument(id, documentData) {
+        const user = await userRepository.getById(id);
+
+        if (!user) {
+            throw new UserNotFoundError();
+        }
+
+        if (!documentData.documentType) {
+            throw new InvalidDocumentTypeError();
+        }
+
+        const validDocumentTypes = Object.values(DOCUMENT_TYPES);
+
+        if (!validDocumentTypes.includes(documentData.documentType)) {
+            throw new InvalidDocumentTypeError();
+        }
+
+        return await userRepository.addDocument(id, documentData);
     }
 
     async updateUser(id, data) {

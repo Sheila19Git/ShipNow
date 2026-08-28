@@ -1,13 +1,37 @@
+const multer = require("multer");
+
 const ERROR_DICTIONARY = require("./error.dictionary");
 const logger = require("../config/logger");
 
 const errorMiddleware = (error, req, res, next) => {
+
+    let errorCode = error.code;
+
+    if (error instanceof multer.MulterError) {
+
+        if (error.code === "LIMIT_FILE_SIZE") {
+            errorCode = "FILE_TOO_LARGE";
+        }
+
+        if (error.code === "LIMIT_UNEXPECTED_FILE") {
+            errorCode = "INVALID_FILE_TYPE";
+        }
+    }
+
+    if (error.message === "Tipo de archivo no permitido") {
+        errorCode = "INVALID_FILE_TYPE";
+    }
+
+    if (error.message === "Campo de archivo no permitido") {
+        errorCode = "INVALID_FILE_TYPE";
+    }
+
     const errorData =
-        ERROR_DICTIONARY[error.code] ||
+        ERROR_DICTIONARY[errorCode] ||
         ERROR_DICTIONARY.INTERNAL_SERVER_ERROR;
 
-    const code = ERROR_DICTIONARY[error.code]
-        ? error.code
+    const code = ERROR_DICTIONARY[errorCode]
+        ? errorCode
         : "INTERNAL_SERVER_ERROR";
 
     if (code === "INTERNAL_SERVER_ERROR") {

@@ -26,8 +26,38 @@ const ERROR_DICTIONARY = Object.freeze({
     },
 
     INVALID_USER_DATA: {
-    statusCode: 400,
-    message: "El nombre y el email son obligatorios"
+        statusCode: 400,
+        message: "El nombre y el email son obligatorios"
+    },
+
+    FILE_REQUIRED: {
+        statusCode: 400,
+        message: "El archivo es obligatorio"
+    },
+
+    INVALID_FILE_TYPE: {
+        statusCode: 400,
+        message: "El tipo de archivo no está permitido"
+    },
+
+    FILE_TOO_LARGE: {
+        statusCode: 413,
+        message: "El archivo supera el tamaño máximo permitido"
+    },
+
+    INVALID_DOCUMENT_TYPE: {
+        statusCode: 400,
+        message: "El tipo de documento no es válido"
+    },
+
+    DELIVERY_NOT_FOUND: {
+        statusCode: 404,
+        message: "Entrega no encontrada"
+    },
+
+    FILE_SAVE_ERROR: {
+        statusCode: 500,
+        message: "No se pudo guardar el archivo"
     },
 
     INTERNAL_SERVER_ERROR: {

@@ -18,6 +18,36 @@ const deliverySchema = new mongoose.Schema({
     status: {
         type: String,
         default: DELIVERY_STATUS.ASSIGNED
+    },
+
+    receipt: {
+        type: {
+            originalName: {
+                type: String,
+                required: true
+            },
+            generatedName: {
+                type: String,
+                required: true
+            },
+            path: {
+                type: String,
+                required: true
+            },
+            mimeType: {
+                type: String,
+                required: true
+            },
+            size: {
+                type: Number,
+                required: true
+            },
+            uploadedAt: {
+                type: Date,
+                default: Date.now
+            }
+        },
+        required: false
     }
 
 });

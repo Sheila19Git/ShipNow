@@ -10,6 +10,20 @@ class DeliveryRepository {
         return await Delivery.insertMany(data);
     }
 
+    async getById(id) {
+        return await Delivery.findById(id);
+    }
+
+    async addReceipt(id, receiptData) {
+        return await Delivery.findByIdAndUpdate(
+            id,
+            {
+                receipt: receiptData
+            },
+            { new: true }
+        );
+    }
+
 }
 
 module.exports = new DeliveryRepository();
