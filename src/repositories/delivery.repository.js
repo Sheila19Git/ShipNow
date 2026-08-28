@@ -15,13 +15,18 @@ class DeliveryRepository {
     }
 
     async addReceipt(id, receiptData) {
-        return await Delivery.findByIdAndUpdate(
-            id,
-            {
-                receipt: receiptData
-            },
-            { new: true }
-        );
+        try {
+            return await Delivery.findByIdAndUpdate(
+                id,
+                {
+                    receipt: receiptData
+                },
+                { new: true }
+            );
+        } catch (error) {
+            error.code = "FILE_SAVE_ERROR";
+            throw error;
+        }
     }
 
 }

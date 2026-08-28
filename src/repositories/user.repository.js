@@ -23,15 +23,20 @@ class UserRepository {
     }
 
     async addDocument(id, documentData) {
-        return await User.findByIdAndUpdate(
-            id,
-            {
-                $push: {
-                    documents: documentData
-                }
-            },
-            { new: true }
-        );
+        try {
+            return await User.findByIdAndUpdate(
+                id,
+                {
+                    $push: {
+                        documents: documentData
+                    }
+                },
+                { new: true }
+            );
+        } catch (error) {
+            error.code = "FILE_SAVE_ERROR";
+            throw error;
+        }
     }
 
     async delete(id) {
