@@ -5,11 +5,11 @@ const router = express.Router();
 const loggerController = require("../controllers/logger.controller");
 
 /**
- * @openapi
+ * @swagger
  * /api/logger/test:
  *   get:
  *     summary: Probar los niveles del logger
- *     description: Endpoint interno utilizado para validar que los distintos niveles de logging funcionan correctamente.
+ *     description: Endpoint de validación utilizado para comprobar que los distintos niveles del sistema de logging funcionan correctamente. No representa una funcionalidad de negocio.
  *     tags:
  *       - Logger
  *     responses:
@@ -22,11 +22,12 @@ const loggerController = require("../controllers/logger.controller");
  *               properties:
  *                 status:
  *                   type: string
- *                   example: "success"
+ *                   example: success
  *                 message:
  *                   type: string
- *                   example: "Logs de prueba generados correctamente"
+ *                   example: Logs de prueba generados correctamente
  */
+
 router.get("/test", loggerController.testLogger);
 
 module.exports = router;

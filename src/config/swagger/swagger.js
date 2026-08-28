@@ -60,6 +60,7 @@ const options = {
                         },
                         email: {
                             type: "string",
+                            format: "email",
                             example: "sheila@email.com"
                         },
                         role: {
@@ -95,6 +96,25 @@ const options = {
                     }
                 },
 
+                OrderItem: {
+                    type: "object",
+                    required: [
+                        "product",
+                        "quantity"
+                    ],
+                    properties: {
+                        product: {
+                            type: "string",
+                            example: "64f1a2b3c4d5e6f789012345"
+                        },
+                        quantity: {
+                            type: "integer",
+                            minimum: 1,
+                            example: 2
+                        }
+                    }
+                },
+
                 Order: {
                     type: "object",
                     properties: {
@@ -109,7 +129,7 @@ const options = {
                         products: {
                             type: "array",
                             items: {
-                                type: "string"
+                                $ref: "#/components/schemas/OrderItem"
                             }
                         },
                         status: {
@@ -145,20 +165,6 @@ const options = {
                     }
                 },
 
-                OrderItem: {
-                    type: "object",
-                    properties: {
-                        product: {
-                            type: "string",
-                            example: "64f1a2b3c4d5e6f789012345"
-                        },
-                        quantity: {
-                            type: "integer",
-                            example: 2
-                        }
-                    }
-                },
-
                 ErrorResponse: {
                     type: "object",
                     properties: {
@@ -180,9 +186,18 @@ const options = {
                 SuccessResponse: {
                     type: "object",
                     properties: {
+                        status: {
+                            type: "string",
+                            example: "success"
+                        },
                         message: {
                             type: "string",
                             example: "Operación realizada correctamente"
+                        },
+                        payload: {
+                            nullable: true,
+                            description:
+                                "Datos devueltos por la operación, cuando corresponde."
                         }
                     }
                 }

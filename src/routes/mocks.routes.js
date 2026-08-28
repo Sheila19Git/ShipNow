@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 
 const mockController = require("../controllers/mock.controller");
@@ -17,7 +18,7 @@ const mockController = require("../controllers/mock.controller");
  *         description: Cantidad de usuarios mock a generar
  *         schema:
  *           type: integer
- *           minimum: 1
+ *           minimum: 0
  *           default: 1
  *     responses:
  *       200:
@@ -51,21 +52,11 @@ router.get("/users", mockController.getUsers);
  *         description: Cantidad de repartidores mock a generar
  *         schema:
  *           type: integer
- *           minimum: 1
+ *           minimum: 0
  *           default: 1
  *     responses:
  *       200:
  *         description: Repartidores mock generados correctamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   available:
- *                     type: boolean
- *                     example: true
  *       400:
  *         description: Cantidad de mocks inválida
  *         content:
@@ -89,17 +80,11 @@ router.get("/couriers", mockController.getCouriers);
  *         description: Cantidad de pedidos mock a generar
  *         schema:
  *           type: integer
- *           minimum: 1
+ *           minimum: 0
  *           default: 1
  *     responses:
  *       200:
  *         description: Pedidos mock generados correctamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: "#/components/schemas/Order"
  *       400:
  *         description: Cantidad de mocks inválida
  *         content:
@@ -123,17 +108,11 @@ router.get("/orders", mockController.getOrders);
  *         description: Cantidad de entregas mock a generar
  *         schema:
  *           type: integer
- *           minimum: 1
+ *           minimum: 0
  *           default: 1
  *     responses:
  *       200:
- *         description: Entregas mock generados correctamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: "#/components/schemas/Delivery"
+ *         description: Entregas mock generadas correctamente
  *       400:
  *         description: Cantidad de mocks inválida
  *         content:
@@ -157,23 +136,15 @@ router.get("/deliveries", mockController.getDeliveries);
  *         description: Cantidad de usuarios a insertar
  *         schema:
  *           type: integer
- *           minimum: 1
+ *           minimum: 0
  *           default: 1
  *     responses:
  *       201:
  *         description: Usuarios insertados correctamente
  *       400:
  *         description: Cantidad de mocks inválida
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  *       500:
  *         description: Error interno del servidor
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  */
 router.post("/seed/users", mockController.seedUsers);
 
@@ -191,23 +162,15 @@ router.post("/seed/users", mockController.seedUsers);
  *         description: Cantidad de registros a generar
  *         schema:
  *           type: integer
- *           minimum: 1
+ *           minimum: 0
  *           default: 1
  *     responses:
  *       201:
  *         description: Datos mock insertados correctamente
  *       400:
  *         description: Cantidad de mocks inválida
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  *       500:
  *         description: Error interno del servidor
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  */
 router.post("/seed", mockController.seedMockData);
 
