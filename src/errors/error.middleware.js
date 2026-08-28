@@ -1,6 +1,7 @@
 const multer = require("multer");
 
 const ERROR_DICTIONARY = require("./error.dictionary");
+
 const logger = require("../config/logger");
 
 const errorMiddleware = (error, req, res, next) => {
@@ -14,7 +15,7 @@ const errorMiddleware = (error, req, res, next) => {
         }
 
         if (error.code === "LIMIT_UNEXPECTED_FILE") {
-            errorCode = "INVALID_FILE_TYPE";
+            errorCode = "INVALID_FILE_FIELD";
         }
     }
 
@@ -23,7 +24,7 @@ const errorMiddleware = (error, req, res, next) => {
     }
 
     if (error.message === "Campo de archivo no permitido") {
-        errorCode = "INVALID_FILE_TYPE";
+        errorCode = "INVALID_FILE_FIELD";
     }
 
     const errorData =
@@ -35,10 +36,13 @@ const errorMiddleware = (error, req, res, next) => {
         : "INTERNAL_SERVER_ERROR";
 
     if (code === "INTERNAL_SERVER_ERROR") {
+
         logger.error(
             `${req.method} ${req.originalUrl} - ${error.message || "Error interno del servidor"}`
         );
+
     } else {
+
         logger.warning(
             `${req.method} ${req.originalUrl} - ${code}: ${errorData.message}`
         );
