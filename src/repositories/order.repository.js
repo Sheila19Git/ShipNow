@@ -1,7 +1,6 @@
 const Order = require("../models/Order");
 
 class OrderRepository {
-
     async create(data) {
         return await Order.create(data);
     }
@@ -12,6 +11,7 @@ class OrderRepository {
 
     async getAll(page = 1, limit = 10) {
         const safePage = Math.max(Number(page) || 1, 1);
+
         const safeLimit = Math.min(
             Math.max(Number(limit) || 10, 1),
             50
@@ -24,6 +24,9 @@ class OrderRepository {
             .limit(safeLimit);
     }
 
+    async getById(id) {
+        return await Order.findById(id).select("-__v");
+    }
 }
 
 module.exports = new OrderRepository();

@@ -29,7 +29,7 @@ class ProductRepository {
         return await Product.findByIdAndUpdate(
             id,
             data,
-            { new: true }
+           { returnDocument: "after" }
         );
     }
 

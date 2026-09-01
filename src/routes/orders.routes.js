@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const orderService = require("../services/order.service");
+const orderController = require("../controllers/order.controller");
 
 /**
  * @swagger
@@ -52,23 +52,7 @@ const orderService = require("../services/order.service");
  *                   items:
  *                     $ref: "#/components/schemas/Order"
  */
-router.get("/", async (req, res, next) => {
-    try {
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 10;
-
-        const orders = await orderService.getAllOrders(page, limit);
-
-        res.json({
-            status: "success",
-            page,
-            limit: Math.min(Math.max(limit, 1), 50),
-            payload: orders
-        });
-    } catch (error) {
-        next(error);
-    }
-});
+router.get("/", orderController.getAll);
 
 /**
  * @swagger
@@ -102,12 +86,7 @@ router.get("/", async (req, res, next) => {
  *       201:
  *         description: Pedido creado correctamente.
  */
-router.post("/", (req, res) => {
-    res.status(201).json({
-        status: "success",
-        message: "Pedido creado correctamente"
-    });
-});
+router.post("/", orderController.create);
 
 /**
  * @swagger
@@ -128,12 +107,9 @@ router.post("/", (req, res) => {
  *     responses:
  *       200:
  *         description: Pedido consultado correctamente.
+ *       404:
+ *         description: Pedido no encontrado.
  */
-router.get("/:id", (req, res) => {
-    res.json({
-        status: "success",
-        payload: {}
-    });
-});
+router.get("/:id", orderController.getById);
 
 module.exports = router;

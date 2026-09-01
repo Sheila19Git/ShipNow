@@ -30,13 +30,12 @@ class DeliveryRepository {
 
     async addReceipt(id, receiptData) {
         try {
-            return await Delivery.findByIdAndUpdate(
-                id,
-                {
-                    receipt: receiptData
-                },
-                { new: true }
-            );
+          return await Delivery.findByIdAndUpdate
+        (
+         id,
+        { receipt: receiptData },
+     { returnDocument: "after" }
+        );
         } catch (error) {
             error.code = "FILE_SAVE_ERROR";
             throw error;

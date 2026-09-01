@@ -20,7 +20,11 @@ class MockService {
     validateQuantity(qty) {
         const quantity = Number(qty);
 
-        if (!Number.isInteger(quantity) || quantity <= 0) {
+        if (
+            !Number.isInteger(quantity) ||
+            quantity <= 0 ||
+            quantity > 100
+        ) {
             logger.warning(`Cantidad de mocks inválida: ${qty}`);
             throw new InvalidMockQuantityError();
         }
@@ -60,7 +64,9 @@ class MockService {
         const users = generateUsers(quantity);
         const inserted = await userRepository.createMany(users);
 
-        logger.info(`${inserted.length} usuarios cargados correctamente en MongoDB`);
+        logger.info(
+            `${inserted.length} usuarios cargados correctamente en MongoDB`
+        );
 
         return {
             insertados: inserted.length,
@@ -75,7 +81,8 @@ class MockService {
 
         const users = generateUsers(quantity);
 
-        const insertedUsers = await userRepository.createMany(users);
+        const insertedUsers =
+            await userRepository.createMany(users);
 
         const courierUsersData = generateUsers(
             quantity,
@@ -87,20 +94,24 @@ class MockService {
 
         const courierData = generateCouriers(quantity);
 
-        const couriersWithUser = courierData.map((courier, index) => ({
-            ...courier,
-            user: insertedCourierUsers[index]._id
-        }));
+        const couriersWithUser = courierData.map(
+            (courier, index) => ({
+                ...courier,
+                user: insertedCourierUsers[index]._id
+            })
+        );
 
         const insertedCouriers =
             await courierRepository.createMany(couriersWithUser);
 
         const ordersData = generateOrders(quantity);
 
-        const ordersWithUser = ordersData.map((order, index) => ({
-            ...order,
-            user: insertedUsers[index % insertedUsers.length]._id
-        }));
+        const ordersWithUser = ordersData.map(
+            (order, index) => ({
+                ...order,
+                user: insertedUsers[index % insertedUsers.length]._id
+            })
+        );
 
         const insertedOrders =
             await orderRepository.createMany(ordersWithUser);
@@ -115,7 +126,9 @@ class MockService {
             }));
 
         const insertedDeliveries =
-            await deliveryRepository.createMany(deliveriesWithRelations);
+            await deliveryRepository.createMany(
+                deliveriesWithRelations
+            );
 
         logger.info(
             `Mock generado correctamente: ${insertedUsers.length} usuarios, ${insertedCouriers.length} repartidores, ${insertedOrders.length} pedidos y ${insertedDeliveries.length} entregas`

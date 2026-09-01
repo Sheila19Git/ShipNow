@@ -26,7 +26,7 @@ class UserRepository {
     }
 
     async update(id, data) {
-        return await User.findByIdAndUpdate(id, data, { new: true });
+        return await User.findByIdAndUpdate(id, data, { returnDocument: "after" });
     }
 
     async addDocument(id, documentData) {
@@ -38,7 +38,7 @@ class UserRepository {
                         documents: documentData
                     }
                 },
-                { new: true }
+                { returnDocument: "after" }
             );
         } catch (error) {
             error.code = "FILE_SAVE_ERROR";

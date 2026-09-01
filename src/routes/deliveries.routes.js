@@ -2,9 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 
-const deliveryService = require("../services/delivery.service");
-
+const deliveryController = require("../controllers/delivery.controller");
 const fileController = require("../controllers/file.controller");
+
 const { upload } = require("../config/multer/multer.config");
 
 /**
@@ -55,26 +55,7 @@ const { upload } = require("../config/multer/multer.config");
  *                   items:
  *                     $ref: "#/components/schemas/Delivery"
  */
-router.get("/", async (req, res, next) => {
-    try {
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 10;
-
-        const deliveries = await deliveryService.getAllDeliveries(
-            page,
-            limit
-        );
-
-        res.json({
-            status: "success",
-            page,
-            limit,
-            payload: deliveries
-        });
-    } catch (error) {
-        next(error);
-    }
-});
+router.get("/", deliveryController.getAll);
 
 /**
  * @swagger
@@ -92,12 +73,7 @@ router.get("/", async (req, res, next) => {
  *             schema:
  *               $ref: "#/components/schemas/SuccessResponse"
  */
-router.post("/", (req, res) => {
-    res.status(201).json({
-        status: "success",
-        message: "Entrega creada"
-    });
-});
+router.post("/", deliveryController.create);
 
 /**
  * @swagger
@@ -166,13 +142,6 @@ router.post(
  *       200:
  *         description: Entrega consultada correctamente.
  */
-router.get("/:id", (req, res) => {
-    res.json({
-        status: "success",
-        payload: {
-            id: req.params.id
-        }
-    });
-});
+router.get("/:id", deliveryController.getById);
 
 module.exports = router;

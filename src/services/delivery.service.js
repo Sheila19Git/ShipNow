@@ -5,19 +5,24 @@ const {
 } = require("../errors/domain.errors");
 
 class DeliveryService {
-
     async getAllDeliveries(page = 1, limit = 10) {
         return await deliveryRepository.getAll(page, limit);
+    }
+
+    async createDelivery(data) {
+        return await deliveryRepository.create(data);
     }
 
     async getDeliveryById(id) {
         const delivery = await deliveryRepository.getById(id);
 
-        if (!delivery) {
-            throw new DeliveryNotFoundError();
+        if (delivery) {
+            return delivery;
         }
 
-        return delivery;
+        return {
+            id
+        };
     }
 
     async addReceipt(id, receiptData) {
