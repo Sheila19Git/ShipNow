@@ -1,12 +1,14 @@
 const productRepository = require("../repositories/product.repository");
 
 const { PRODUCT_STATUS } = require("../constants");
+
 const { InvalidProductDataError } = require("../errors/domain.errors");
 
 class ProductService {
 
-    async getAllProducts() {
-        const products = await productRepository.getAll();
+    async getAllProducts(page, limit) {
+
+        const products = await productRepository.getAll(page, limit);
 
         return products.filter(
             product =>
@@ -16,10 +18,12 @@ class ProductService {
     }
 
     async getProductById(id) {
+
         return await productRepository.getById(id);
     }
 
     async createProduct(data) {
+
         if (!data.name || data.price === undefined) {
             throw new InvalidProductDataError();
         }
@@ -31,12 +35,15 @@ class ProductService {
     }
 
     async updateProduct(id, data) {
+
         return await productRepository.update(id, data);
     }
 
     async deleteProduct(id) {
+
         return await productRepository.delete(id);
     }
+
 }
 
 module.exports = new ProductService();

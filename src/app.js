@@ -9,6 +9,7 @@ const orderRoutes = require("./routes/orders.routes");
 const deliveryRoutes = require("./routes/deliveries.routes");
 const mockRoutes = require("./routes/mocks.routes");
 const loggerRoutes = require("./routes/logger.routes");
+const healthRoutes = require("./routes/health.routes");
 
 const errorMiddleware = require("./errors/error.middleware");
 
@@ -20,14 +21,22 @@ app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/deliveries", deliveryRoutes);
-app.use("/api/mocks", mockRoutes);
-app.use("/api/logger", loggerRoutes);
 
-app.use(
-    "/api/docs",
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerSpec)
-);
+app.use("/health", healthRoutes);
+
+// Endpoints internos:
+// disponibles en development y test,
+// restringidos en production.
+if (process.env.NODE_ENV !== "production") {
+    app.use("/api/mocks", mockRoutes);
+    app.use("/api/logger", loggerRoutes);
+
+    app.use(
+        "/api/docs",
+        swaggerUi.serve,
+        swaggerUi.setup(swaggerSpec)
+    );
+}
 
 app.get("/", (req, res) => {
     res.send("ShipNow API funcionando");

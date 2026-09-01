@@ -6,6 +6,10 @@ const {
 
 class DeliveryService {
 
+    async getAllDeliveries(page = 1, limit = 10) {
+        return await deliveryRepository.getAll(page, limit);
+    }
+
     async getDeliveryById(id) {
         const delivery = await deliveryRepository.getById(id);
 

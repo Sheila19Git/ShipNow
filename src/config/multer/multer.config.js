@@ -1,8 +1,12 @@
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
 
-const uploadDir = path.join(process.cwd(), "uploads");
+const uploadDir =
+    process.env.UPLOAD_DIR ||
+    path.join(os.tmpdir(), "shipnow-uploads");
+
 const usersDir = path.join(uploadDir, "users");
 const deliveriesDir = path.join(uploadDir, "deliveries");
 
@@ -10,7 +14,9 @@ fs.mkdirSync(usersDir, { recursive: true });
 fs.mkdirSync(deliveriesDir, { recursive: true });
 
 const storage = multer.diskStorage({
+
     destination: (req, file, cb) => {
+
         if (file.fieldname === "document") {
             cb(null, usersDir);
             return;
@@ -23,15 +29,20 @@ const storage = multer.diskStorage({
 
         const error = new Error("Campo de archivo no permitido");
         error.code = "INVALID_FILE_FIELD";
+
         cb(error);
     },
 
     filename: (req, file, cb) => {
+
         const extension = path.extname(file.originalname);
-        const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`;
+
+        const uniqueName =
+            `${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`;
 
         cb(null, uniqueName);
     },
+
 });
 
 const allowedMimeTypes = [
@@ -41,9 +52,12 @@ const allowedMimeTypes = [
 ];
 
 const fileFilter = (req, file, cb) => {
+
     if (!allowedMimeTypes.includes(file.mimetype)) {
+
         const error = new Error("Tipo de archivo no permitido");
         error.code = "INVALID_FILE_TYPE";
+
         return cb(error);
     }
 
@@ -51,11 +65,15 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
+
     storage,
+
     fileFilter,
+
     limits: {
         fileSize: 5 * 1024 * 1024,
     },
+
 });
 
 module.exports = {

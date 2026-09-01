@@ -2,8 +2,19 @@ const Product = require("../models/Product");
 
 class ProductRepository {
 
-    async getAll() {
-        return await Product.find({}, "-__v");
+    async getAll(page = 1, limit = 10) {
+
+        const safePage = Math.max(Number(page) || 1, 1);
+        const safeLimit = Math.min(
+            Math.max(Number(limit) || 10, 1),
+            50
+        );
+
+        const skip = (safePage - 1) * safeLimit;
+
+        return await Product.find({}, "-__v")
+            .skip(skip)
+            .limit(safeLimit);
     }
 
     async getById(id) {
@@ -15,7 +26,11 @@ class ProductRepository {
     }
 
     async update(id, data) {
-        return await Product.findByIdAndUpdate(id, data, { new: true });
+        return await Product.findByIdAndUpdate(
+            id,
+            data,
+            { new: true }
+        );
     }
 
     async delete(id) {

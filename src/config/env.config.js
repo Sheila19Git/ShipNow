@@ -8,7 +8,12 @@ dotenv.config({
     override: true
 });
 
-const requiredVariables = ["PORT", "MONGODB_URI", "NODE_ENV"];
+const requiredVariables = [
+    "PORT",
+    "MONGODB_URI",
+    "NODE_ENV",
+    "LOG_LEVEL"
+];
 
 requiredVariables.forEach((variable) => {
     if (!process.env[variable]) {
@@ -19,5 +24,6 @@ requiredVariables.forEach((variable) => {
 module.exports = {
     PORT: process.env.PORT,
     MONGODB_URI: process.env.MONGODB_URI,
-    NODE_ENV: process.env.NODE_ENV
+    NODE_ENV: process.env.NODE_ENV,
+    LOG_LEVEL: process.env.LOG_LEVEL
 };

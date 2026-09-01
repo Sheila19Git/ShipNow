@@ -2,6 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 
+const deliveryService = require("../services/delivery.service");
+
 const fileController = require("../controllers/file.controller");
 const { upload } = require("../config/multer/multer.config");
 
@@ -10,9 +12,27 @@ const { upload } = require("../config/multer/multer.config");
  * /api/deliveries:
  *   get:
  *     summary: Obtener la lista de entregas
- *     description: Obtiene la lista de entregas disponibles.
+ *     description: Obtiene una lista paginada de entregas.
  *     tags:
  *       - Deliveries
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         description: Número de página.
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *           minimum: 1
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Cantidad máxima de entregas por página.
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *           minimum: 1
+ *           maximum: 50
  *     responses:
  *       200:
  *         description: Lista de entregas obtenida correctamente.
@@ -24,11 +44,41 @@ const { upload } = require("../config/multer/multer.config");
  *                 status:
  *                   type: string
  *                   example: success
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
  *                 payload:
  *                   type: array
  *                   items:
  *                     $ref: "#/components/schemas/Delivery"
- *
+ */
+router.get("/", async (req, res, next) => {
+    try {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+
+        const deliveries = await deliveryService.getAllDeliveries(
+            page,
+            limit
+        );
+
+        res.json({
+            status: "success",
+            page,
+            limit,
+            payload: deliveries
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /api/deliveries:
  *   post:
  *     summary: Crear o asignar una entrega
  *     description: Crea una nueva entrega.
@@ -42,13 +92,6 @@ const { upload } = require("../config/multer/multer.config");
  *             schema:
  *               $ref: "#/components/schemas/SuccessResponse"
  */
-router.get("/", (req, res) => {
-    res.json({
-        status: "success",
-        payload: []
-    });
-});
-
 router.post("/", (req, res) => {
     res.status(201).json({
         status: "success",
@@ -88,43 +131,14 @@ router.post("/", (req, res) => {
  *     responses:
  *       201:
  *         description: Comprobante cargado correctamente.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 message:
- *                   type: string
- *                   example: Comprobante cargado correctamente
- *                 delivery:
- *                   $ref: "#/components/schemas/Delivery"
  *       400:
  *         description: Archivo faltante o tipo de archivo inválido.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  *       404:
  *         description: Entrega no encontrada.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  *       413:
  *         description: El archivo supera el tamaño máximo permitido.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  *       500:
  *         description: Error al guardar el comprobante.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  */
 router.post(
     "/:deliveryId/receipt",
@@ -137,7 +151,7 @@ router.post(
  * /api/deliveries/{id}:
  *   get:
  *     summary: Obtener una entrega por ID
- *     description: Obtiene el identificador de una entrega utilizando su ID.
+ *     description: Obtiene una entrega utilizando su ID.
  *     tags:
  *       - Deliveries
  *     parameters:
@@ -150,21 +164,7 @@ router.post(
  *           example: "64f1a2b3c4d5e6f789012345"
  *     responses:
  *       200:
- *         description: Identificador de la entrega obtenido correctamente.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 payload:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       example: "64f1a2b3c4d5e6f789012345"
+ *         description: Entrega consultada correctamente.
  */
 router.get("/:id", (req, res) => {
     res.json({

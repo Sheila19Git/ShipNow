@@ -50,13 +50,19 @@ class FileController {
 
             );
 
+            const safeUser = user.toObject();
+
+            if (safeUser.document) {
+                delete safeUser.document.path;
+            }
+
             res.status(201).json({
 
                 status: "success",
 
                 message: "Documento cargado correctamente",
 
-                user
+                user: safeUser
 
             });
 
@@ -116,13 +122,19 @@ class FileController {
 
             );
 
+            const safeDelivery = delivery.toObject();
+
+            if (safeDelivery.receipt) {
+                delete safeDelivery.receipt.path;
+            }
+
             res.status(201).json({
 
                 status: "success",
 
                 message: "Comprobante cargado correctamente",
 
-                delivery
+                delivery: safeDelivery
 
             });
 

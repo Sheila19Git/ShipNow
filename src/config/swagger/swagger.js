@@ -65,7 +65,7 @@ const options = {
                         },
                         role: {
                             type: "string",
-                            example: "user"
+                            example: "USER"
                         }
                     }
                 },
@@ -91,17 +91,14 @@ const options = {
                         },
                         status: {
                             type: "string",
-                            example: "available"
+                            example: "AVAILABLE"
                         }
                     }
                 },
 
                 OrderItem: {
                     type: "object",
-                    required: [
-                        "product",
-                        "quantity"
-                    ],
+                    required: ["product", "quantity"],
                     properties: {
                         product: {
                             type: "string",
@@ -134,11 +131,11 @@ const options = {
                         },
                         status: {
                             type: "string",
-                            example: "pending"
+                            example: "PENDING"
                         },
                         priority: {
                             type: "string",
-                            example: "medium"
+                            example: "MEDIUM"
                         }
                     }
                 },
@@ -160,7 +157,7 @@ const options = {
                         },
                         status: {
                             type: "string",
-                            example: "assigned"
+                            example: "ASSIGNED"
                         }
                     }
                 },

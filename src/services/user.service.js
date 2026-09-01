@@ -10,8 +10,8 @@ const {
 
 class UserService {
 
-    async getAllUsers() {
-        return await userRepository.getAll();
+    async getAllUsers(page, limit) {
+        return await userRepository.getAll(page, limit);
     }
 
     async getUserById(id) {
@@ -25,6 +25,7 @@ class UserService {
     }
 
     async createUser(data) {
+
         if (!data.name || !data.email) {
             throw new InvalidUserDataError();
         }
@@ -33,6 +34,7 @@ class UserService {
     }
 
     async addDocument(id, documentData) {
+
         const user = await userRepository.getById(id);
 
         if (!user) {
@@ -53,6 +55,7 @@ class UserService {
     }
 
     async updateUser(id, data) {
+
         const user = await userRepository.update(id, data);
 
         if (!user) {
@@ -63,6 +66,7 @@ class UserService {
     }
 
     async deleteUser(id) {
+
         const user = await userRepository.delete(id);
 
         if (!user) {
@@ -71,6 +75,7 @@ class UserService {
 
         return user;
     }
+
 }
 
 module.exports = new UserService();

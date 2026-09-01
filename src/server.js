@@ -1,6 +1,6 @@
+const config = require("./config/env.config");
 const app = require("./app");
 const connectDB = require("./config/database");
-const config = require("./config/env.config");
 const logger = require("./config/logger");
 
 const startServer = async () => {
