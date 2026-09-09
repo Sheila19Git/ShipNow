@@ -1,6 +1,6 @@
 const express = require("express");
-
 const swaggerUi = require("swagger-ui-express");
+
 const swaggerSpec = require("./config/swagger/swagger");
 
 const productRoutes = require("./routes/products.routes");
@@ -21,21 +21,17 @@ app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/deliveries", deliveryRoutes);
-
 app.use("/health", healthRoutes);
 
-// Endpoints internos:
-// disponibles en development y test,
-// restringidos en production.
+app.use(
+    "/api/docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec)
+);
+
 if (process.env.NODE_ENV !== "production") {
     app.use("/api/mocks", mockRoutes);
     app.use("/api/logger", loggerRoutes);
-
-    app.use(
-        "/api/docs",
-        swaggerUi.serve,
-        swaggerUi.setup(swaggerSpec)
-    );
 }
 
 app.get("/", (req, res) => {

@@ -1,8 +1,10 @@
 const express = require("express");
+
 const router = express.Router();
 
 const userController = require("../controllers/user.controller");
 const fileController = require("../controllers/file.controller");
+
 const { upload } = require("../config/multer/multer.config");
 
 /**
@@ -54,10 +56,11 @@ router.get("/", userController.getAll);
  *                 example: Sheila
  *               email:
  *                 type: string
+ *                 format: email
  *                 example: sheila@email.com
  *               role:
  *                 type: string
- *                 example: user
+ *                 example: USER
  *     responses:
  *       201:
  *         description: Usuario creado correctamente.
@@ -81,10 +84,6 @@ router.get("/", userController.getAll);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
- *             example:
- *               status: error
- *               code: INTERNAL_SERVER_ERROR
- *               message: Error interno del servidor
  */
 router.post("/", userController.create);
 
@@ -238,10 +237,11 @@ router.get("/:id", userController.getById);
  *                 example: Sheila
  *               email:
  *                 type: string
+ *                 format: email
  *                 example: sheila@email.com
  *               role:
  *                 type: string
- *                 example: admin
+ *                 example: ADMIN
  *     responses:
  *       200:
  *         description: Usuario actualizado correctamente.
