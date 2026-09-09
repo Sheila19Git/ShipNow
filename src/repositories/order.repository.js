@@ -1,32 +1,60 @@
 const Order = require("../models/Order");
 
 class OrderRepository {
-    async create(data) {
-        return await Order.create(data);
-    }
+  async create(data) {
+    return await Order.create(data);
+  }
 
-    async createMany(data) {
-        return await Order.insertMany(data);
-    }
+  async createMany(data) {
+    return await Order.insertMany(data);
+  }
 
-    async getAll(page = 1, limit = 10) {
-        const safePage = Math.max(Number(page) || 1, 1);
+  async getAll(page = 1, limit = 10) {
+    const safePage = Math.max(Number(page) || 1, 1);
+    const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 50);
 
-        const safeLimit = Math.min(
-            Math.max(Number(limit) || 10, 1),
-            50
-        );
+    const skip = (safePage - 1) * safeLimit;
 
-        const skip = (safePage - 1) * safeLimit;
+    const [orders, total] = await Promise.all([
+      Order.find()
+        .populate("user")
+        .populate("products.product")
+        .skip(skip)
+        .limit(safeLimit)
+        .lean(),
 
-        return await Order.find({}, "-__v")
-            .skip(skip)
-            .limit(safeLimit);
-    }
+      Order.countDocuments()
+    ]);
 
-    async getById(id) {
-        return await Order.findById(id).select("-__v");
-    }
+    return {
+      orders,
+      total,
+      page: safePage,
+      limit: safeLimit,
+      totalPages: Math.ceil(total / safeLimit)
+    };
+  }
+
+  async getById(id) {
+    return await Order.findById(id)
+      .populate("user")
+      .populate("products.product")
+      .lean();
+  }
+
+  async update(id, data) {
+    return await Order.findByIdAndUpdate(
+      id,
+      data,
+      {
+        new: true,
+        runValidators: true
+      }
+    )
+      .populate("user")
+      .populate("products.product")
+      .lean();
+  }
 }
 
 module.exports = new OrderRepository();
