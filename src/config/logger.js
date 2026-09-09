@@ -7,20 +7,33 @@ const logFormat = printf(({ timestamp, level, message }) => {
     return `${timestamp} [${level}] ${message}`;
 });
 
-const consoleTransport = new winston.transports.Console({
-    format: combine(
-        timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        logFormat
-    )
-});
+const transports = [
+    new winston.transports.DailyRotateFile({
+        filename: "logs/error-%DATE%.log",
+        datePattern: "YYYY-MM-DD",
+        level: "warning",
+        maxFiles: "7d",
+        zippedArchive: true
+    }),
 
-const errorTransport = new winston.transports.DailyRotateFile({
-    filename: "logs/error-%DATE%.log",
-    datePattern: "YYYY-MM-DD",
-    level: "error",
-    maxFiles: "7d",
-    zippedArchive: true
-});
+    new winston.transports.DailyRotateFile({
+        filename: "logs/combined-%DATE%.log",
+        datePattern: "YYYY-MM-DD",
+        maxFiles: "7d",
+        zippedArchive: true
+    })
+];
+
+if (process.env.NODE_ENV !== "production") {
+    transports.push(
+        new winston.transports.Console({
+            format: combine(
+                timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+                logFormat
+            )
+        })
+    );
+}
 
 const logger = winston.createLogger({
     levels: {
@@ -32,17 +45,16 @@ const logger = winston.createLogger({
         debug: 5
     },
 
-    level: process.env.LOG_LEVEL || (process.env.NODE_ENV === "production" ? "info" : "debug"),
+    level:
+        process.env.LOG_LEVEL ||
+        (process.env.NODE_ENV === "production" ? "info" : "debug"),
 
     format: combine(
         timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         logFormat
     ),
 
-    transports: [
-        consoleTransport,
-        errorTransport
-    ]
+    transports
 });
 
 module.exports = logger;
