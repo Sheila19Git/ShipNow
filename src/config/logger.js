@@ -1,34 +1,36 @@
 const winston = require("winston");
-require("winston-daily-rotate-file");
 
-const { combine, timestamp, printf } = winston.format;
+const {
+    combine,
+    timestamp,
+    printf
+} = winston.format;
 
-const logFormat = printf(({ timestamp, level, message }) => {
-    return `${timestamp} [${level}] ${message}`;
-});
+const logFormat = printf(
+    ({ timestamp, level, message }) => {
+        return `${timestamp} [${level}] ${message}`;
+    }
+);
 
 const transports = [
-    new winston.transports.DailyRotateFile({
-        filename: "logs/error-%DATE%.log",
-        datePattern: "YYYY-MM-DD",
-        level: "warning",
-        maxFiles: "7d",
-        zippedArchive: true
+    new winston.transports.File({
+        filename: "logs/error.log",
+        level: "error"
     }),
 
-    new winston.transports.DailyRotateFile({
-        filename: "logs/combined-%DATE%.log",
-        datePattern: "YYYY-MM-DD",
-        maxFiles: "7d",
-        zippedArchive: true
+    new winston.transports.File({
+        filename: "logs/combined.log"
     })
 ];
 
-if (process.env.NODE_ENV !== "production") {
+// La consola se utiliza únicamente en desarrollo
+if (process.env.NODE_ENV === "development") {
     transports.push(
         new winston.transports.Console({
             format: combine(
-                timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+                timestamp({
+                    format: "YYYY-MM-DD HH:mm:ss"
+                }),
                 logFormat
             )
         })
@@ -47,10 +49,16 @@ const logger = winston.createLogger({
 
     level:
         process.env.LOG_LEVEL ||
-        (process.env.NODE_ENV === "production" ? "info" : "debug"),
+        (
+            process.env.NODE_ENV === "production"
+                ? "info"
+                : "debug"
+        ),
 
     format: combine(
-        timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        timestamp({
+            format: "YYYY-MM-DD HH:mm:ss"
+        }),
         logFormat
     ),
 

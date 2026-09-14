@@ -16,13 +16,11 @@ class DeliveryService {
     async getDeliveryById(id) {
         const delivery = await deliveryRepository.getById(id);
 
-        if (delivery) {
-            return delivery;
+        if (!delivery) {
+            throw new DeliveryNotFoundError();
         }
 
-        return {
-            id
-        };
+        return delivery;
     }
 
     async addReceipt(id, receiptData) {

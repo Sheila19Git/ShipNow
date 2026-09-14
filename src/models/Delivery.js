@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
-const { DELIVERY_STATUS } = require("../constants");
+
+const {
+    DELIVERY_STATUS
+} = require("../constants");
 
 const deliverySchema = new mongoose.Schema({
-
     order: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Order",
@@ -17,6 +19,7 @@ const deliverySchema = new mongoose.Schema({
 
     status: {
         type: String,
+        enum: Object.values(DELIVERY_STATUS),
         default: DELIVERY_STATUS.ASSIGNED
     },
 
@@ -24,32 +27,41 @@ const deliverySchema = new mongoose.Schema({
         type: {
             originalName: {
                 type: String,
-                required: true
+                required: true,
+                trim: true
             },
+
             generatedName: {
                 type: String,
-                required: true
+                required: true,
+                trim: true
             },
+
             path: {
                 type: String,
                 required: true
             },
+
             mimeType: {
                 type: String,
-                required: true
+                required: true,
+                trim: true
             },
+
             size: {
                 type: Number,
-                required: true
+                required: true,
+                min: 1
             },
+
             uploadedAt: {
                 type: Date,
                 default: Date.now
             }
         },
+
         required: false
     }
-
 });
 
 module.exports = mongoose.model("Delivery", deliverySchema);

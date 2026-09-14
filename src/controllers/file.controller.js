@@ -1,7 +1,5 @@
 const userService = require("../services/user.service");
-
 const deliveryService = require("../services/delivery.service");
-
 const logger = require("../config/logger");
 
 class FileController {
@@ -36,7 +34,9 @@ class FileController {
             if (safeUser.documents) {
                 safeUser.documents = safeUser.documents.map((document) => {
                     const safeDocument = { ...document };
+
                     delete safeDocument.path;
+
                     return safeDocument;
                 });
             }
@@ -86,7 +86,7 @@ class FileController {
                 delete safeDelivery.receipt.path;
             }
 
-            res.status(201).json({
+            res.status(200).json({
                 status: "success",
                 message: "Comprobante cargado correctamente",
                 delivery: safeDelivery

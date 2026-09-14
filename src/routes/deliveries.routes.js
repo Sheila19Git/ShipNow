@@ -1,72 +1,46 @@
 const express = require("express");
 
-const router = express.Router();
-
 const deliveryController = require("../controllers/delivery.controller");
-
 const fileController = require("../controllers/file.controller");
 
 const { upload } = require("../config/multer/multer.config");
+
+const router = express.Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Deliveries
+ *   description: Gestión de entregas
+ */
 
 /**
  * @swagger
  * /api/deliveries:
  *   get:
- *     summary: Obtener la lista de entregas
- *     description: Obtiene una lista paginada de entregas.
- *     tags:
- *       - Deliveries
+ *     summary: Obtener todas las entregas
+ *     tags: [Deliveries]
  *     parameters:
  *       - in: query
  *         name: page
- *         required: false
- *         description: Número de página.
  *         schema:
  *           type: integer
- *           default: 1
  *           minimum: 1
+ *           default: 1
+ *         description: Número de página
  *       - in: query
  *         name: limit
- *         required: false
- *         description: Cantidad máxima de entregas por página.
  *         schema:
  *           type: integer
- *           default: 10
  *           minimum: 1
  *           maximum: 50
+ *           default: 10
+ *         description: Cantidad de entregas por página
  *     responses:
  *       200:
- *         description: Lista de entregas obtenida correctamente.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 page:
- *                   type: integer
- *                   example: 1
- *                 limit:
- *                   type: integer
- *                   example: 10
- *                 payload:
- *                   type: array
- *                   items:
- *                     $ref: "#/components/schemas/Delivery"
- *       400:
- *         description: Parámetros de paginación inválidos.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *         description: Lista de entregas obtenida correctamente
  *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *         description: Error interno del servidor
  */
 router.get("/", deliveryController.getAll);
 
@@ -74,10 +48,9 @@ router.get("/", deliveryController.getAll);
  * @swagger
  * /api/deliveries:
  *   post:
- *     summary: Crear una entrega
- *     description: Crea una nueva entrega asociada a un pedido y, opcionalmente, a un repartidor.
- *     tags:
- *       - Deliveries
+ *     summary: Crear una nueva entrega
+ *     description: Crea una nueva entrega asociada a un pedido y a un repartidor.
+ *     tags: [Deliveries]
  *     requestBody:
  *       required: true
  *       content:
@@ -86,44 +59,27 @@ router.get("/", deliveryController.getAll);
  *             type: object
  *             required:
  *               - order
+ *               - courier
  *             properties:
  *               order:
  *                 type: string
- *                 description: ID del pedido asociado.
- *                 example: 64f1a2b3c4d5e6f789012345
+ *                 description: ID del pedido asociado
+ *                 example: 665f1a2b3c4d5e6f78901234
  *               courier:
  *                 type: string
- *                 description: ID del repartidor asignado.
- *                 example: 64f1a2b3c4d5e6f789012346
+ *                 description: ID del repartidor asignado
+ *                 example: 665f1a2b3c4d5e6f78905678
  *               status:
  *                 type: string
- *                 description: Estado inicial de la entrega.
- *                 example: ASSIGNED
+ *                 description: Estado de la entrega
+ *                 example: assigned
  *     responses:
  *       201:
- *         description: Entrega creada correctamente.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Delivery"
+ *         description: Entrega creada correctamente
  *       400:
- *         description: Datos de la entrega inválidos.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
- *       404:
- *         description: Pedido o repartidor no encontrado.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *         description: Datos inválidos
  *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *         description: Error interno del servidor
  */
 router.post("/", deliveryController.create);
 
@@ -131,18 +87,16 @@ router.post("/", deliveryController.create);
  * @swagger
  * /api/deliveries/{deliveryId}/receipt:
  *   post:
- *     summary: Subir comprobante de entrega
- *     description: Permite cargar un comprobante asociado a una entrega existente.
- *     tags:
- *       - Deliveries
+ *     summary: Cargar comprobante de entrega
+ *     description: Asocia un comprobante PDF o imagen a una entrega existente.
+ *     tags: [Deliveries]
  *     parameters:
  *       - in: path
  *         name: deliveryId
  *         required: true
- *         description: ID de la entrega.
  *         schema:
  *           type: string
- *           example: 64f1a2b3c4d5e6f789012345
+ *         description: ID de la entrega
  *     requestBody:
  *       required: true
  *       content:
@@ -155,47 +109,16 @@ router.post("/", deliveryController.create);
  *               receipt:
  *                 type: string
  *                 format: binary
- *                 description: Archivo PDF, JPG o PNG de hasta 5 MB.
+ *                 description: Archivo del comprobante
  *     responses:
- *       201:
- *         description: Comprobante cargado correctamente.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 message:
- *                   type: string
- *                   example: Comprobante cargado correctamente
- *                 delivery:
- *                   $ref: "#/components/schemas/Delivery"
+ *       200:
+ *         description: Comprobante cargado correctamente
  *       400:
- *         description: Archivo faltante o tipo de archivo inválido.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *         description: Archivo faltante o inválido
  *       404:
- *         description: Entrega no encontrada.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
- *       413:
- *         description: El archivo supera el tamaño máximo permitido.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *         description: Entrega no encontrada
  *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *         description: Error interno del servidor
  */
 router.post(
     "/:deliveryId/receipt",
@@ -208,36 +131,21 @@ router.post(
  * /api/deliveries/{id}:
  *   get:
  *     summary: Obtener una entrega por ID
- *     description: Obtiene una entrega específica utilizando su ID.
- *     tags:
- *       - Deliveries
+ *     tags: [Deliveries]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la entrega a consultar.
  *         schema:
  *           type: string
- *           example: 64f1a2b3c4d5e6f789012345
+ *         description: ID de la entrega
  *     responses:
  *       200:
- *         description: Entrega consultada correctamente.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/Delivery"
+ *         description: Entrega obtenida correctamente
  *       404:
- *         description: Entrega no encontrada.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *         description: Entrega no encontrada
  *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
+ *         description: Error interno del servidor
  */
 router.get("/:id", deliveryController.getById);
 

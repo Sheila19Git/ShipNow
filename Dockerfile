@@ -21,6 +21,11 @@ COPY package*.json ./
 
 COPY src ./src
 
+RUN mkdir -p /app/uploads /app/logs \
+    && chown -R node:node /app
+
+USER node
+
 EXPOSE 8080
 
 CMD ["npm", "start"]

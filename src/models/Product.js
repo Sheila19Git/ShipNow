@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
-const { PRODUCT_STATUS } = require("../constants");
+
+const {
+    PRODUCT_STATUS
+} = require("../constants");
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -7,18 +10,23 @@ const productSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+
     price: {
         type: Number,
         required: true,
         min: 0
     },
+
     stock: {
         type: Number,
         required: true,
-        default: 0
+        default: 0,
+        min: 0
     },
+
     status: {
         type: String,
+        enum: Object.values(PRODUCT_STATUS),
         default: PRODUCT_STATUS.AVAILABLE
     }
 });

@@ -49,6 +49,37 @@ class DeliveryController {
             next(error);
         }
     }
+
+    async addReceipt(req, res, next) {
+        try {
+            if (!req.file) {
+                const error = new Error("Debe adjuntar un comprobante");
+                error.code = "FILE_REQUIRED";
+                throw error;
+            }
+
+            const receiptData = {
+                originalName: req.file.originalname,
+                generatedName: req.file.filename,
+                path: req.file.path,
+                mimeType: req.file.mimetype,
+                size: req.file.size
+            };
+
+            const delivery = await deliveryService.addReceipt(
+                req.params.deliveryId,
+                receiptData
+            );
+
+            res.json({
+                status: "success",
+                message: "Comprobante agregado correctamente",
+                payload: delivery
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new DeliveryController();

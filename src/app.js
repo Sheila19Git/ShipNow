@@ -43,9 +43,9 @@ app.use(
 
 if (process.env.NODE_ENV !== "production") {
   app.use("/api/mocks", mockRoutes);
-
-  app.use("/api/logger", loggerRoutes);
 }
+
+app.use("/api/logger", loggerRoutes);
 
 app.get("/", (req, res) => {
   res.send("ShipNow API funcionando");
