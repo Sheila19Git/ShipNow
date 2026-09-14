@@ -1,12 +1,25 @@
-FROM node:20-alpine
+# Etapa 1: instalación de dependencias
+FROM node:20-alpine AS dependencies
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci --omit=dev
 
-COPY . .
+
+# Etapa 2: imagen final de producción
+FROM node:20-alpine AS production
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=dependencies /app/node_modules ./node_modules
+
+COPY package*.json ./
+
+COPY src ./src
 
 EXPOSE 8080
 
