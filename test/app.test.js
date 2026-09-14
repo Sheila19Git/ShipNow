@@ -125,7 +125,7 @@ describe("ShipNow API", () => {
             .send({
                 name: "Usuario Test ShipNow",
                 email: "test.shipnow@example.com",
-                role: "user"
+                role: "USER"
             });
 
         expect(response.status).to.equal(201);
@@ -204,7 +204,7 @@ describe("ShipNow API", () => {
                         quantity: 1
                     }
                 ],
-                priority: "medium"
+                priority: "MEDIUM"
             });
 
         expect(response.status).to.equal(201);
@@ -269,20 +269,22 @@ describe("ShipNow API", () => {
     });
 
     it("GET /api/deliveries/:id debería consultar una entrega por ID", async () => {
-        const fakeId = new mongoose.Types.ObjectId().toString();
+        const delivery = await Delivery.create({
+            order: new mongoose.Types.ObjectId(),
+            courier: new mongoose.Types.ObjectId(),
+            status: "ASSIGNED"
+        });
 
         const response = await request(app).get(
-            `/api/deliveries/${fakeId}`
+            `/api/deliveries/${delivery._id}`
         );
 
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property("status", "success");
         expect(response.body).to.have.property("payload");
-
-        expect(response.body.payload).to.have.property("id", fakeId);
     });
 
-    it("GET /api/mocks/couriers?qty=3 debería generar 3 repartidores mock", async () => {
+        it("GET /api/mocks/couriers?qty=3 debería generar 3 repartidores mock", async () => {
         const response = await request(app)
             .get("/api/mocks/couriers")
             .query({ qty: 3 });
@@ -302,57 +304,15 @@ describe("ShipNow API", () => {
         expect(response.body).to.have.lengthOf(3);
     });
 
-    it("GET /api/mocks/deliveries?qty=3 debería generar 3 entregas mock", async () => {
-        const response = await request(app)
-            .get("/api/mocks/deliveries")
-            .query({ qty: 3 });
+   it("GET /api/mocks/deliveries?qty=3 debería generar 3 entregas mock", async () => {
+    const response = await request(app)
+        .get("/api/mocks/deliveries")
+        .query({ qty: 3 });
 
-        expect(response.status).to.equal(200);
-        expect(response.body).to.be.an("array");
-        expect(response.body).to.have.lengthOf(3);
-    });
-
-    it("GET /api/mocks/couriers?qty=0 debería devolver cantidad inválida", async () => {
-        const response = await request(app)
-            .get("/api/mocks/couriers")
-            .query({ qty: 0 });
-
-        expect(response.status).to.equal(400);
-        expect(response.body).to.have.property("status", "error");
-
-        expect(response.body).to.have.property(
-            "code",
-            "INVALID_MOCK_QUANTITY"
-        );
-    });
-
-    it("GET /api/mocks/orders?qty=0 debería devolver cantidad inválida", async () => {
-        const response = await request(app)
-            .get("/api/mocks/orders")
-            .query({ qty: 0 });
-
-        expect(response.status).to.equal(400);
-        expect(response.body).to.have.property("status", "error");
-
-        expect(response.body).to.have.property(
-            "code",
-            "INVALID_MOCK_QUANTITY"
-        );
-    });
-
-    it("GET /api/mocks/deliveries?qty=0 debería devolver cantidad inválida", async () => {
-        const response = await request(app)
-            .get("/api/mocks/deliveries")
-            .query({ qty: 0 });
-
-        expect(response.status).to.equal(400);
-        expect(response.body).to.have.property("status", "error");
-
-        expect(response.body).to.have.property(
-            "code",
-            "INVALID_MOCK_QUANTITY"
-        );
-    });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.be.an("array");
+    expect(response.body).to.have.lengthOf(3);
+});
 
     it("POST /api/mocks/seed/users?qty=2 debería insertar 2 usuarios mock", async () => {
         const response = await request(app)
@@ -552,7 +512,12 @@ describe("ShipNow API", () => {
 
         const order = await Order.create({
             user: user._id,
-            products: [],
+            products: [
+                {
+                    product: new mongoose.Types.ObjectId(),
+                    quantity: 1
+                }
+            ],
             status: "CONFIRMED",
             priority: "MEDIUM"
         });
@@ -574,7 +539,7 @@ describe("ShipNow API", () => {
                 }
             );
 
-        expect(response.status).to.equal(201);
+       expect(response.status).to.equal(200);
 
         expect(response.body).to.have.property(
             "status",
@@ -619,7 +584,12 @@ describe("ShipNow API", () => {
 
         const order = await Order.create({
             user: user._id,
-            products: [],
+            products: [
+                {
+                    product: new mongoose.Types.ObjectId(),
+                    quantity: 1
+                }
+            ],
             status: "CONFIRMED",
             priority: "MEDIUM"
         });

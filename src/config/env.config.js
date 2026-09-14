@@ -1,29 +1,31 @@
 const dotenv = require("dotenv");
 
 const envFile =
-    process.env.NODE_ENV === "test" ? ".env.test" : ".env";
+  process.env.NODE_ENV === "test" ? ".env.test" : ".env";
 
 dotenv.config({
-    path: envFile,
-    override: true
+  path: envFile,
+  override: true,
 });
 
 const requiredVariables = [
-    "PORT",
-    "MONGODB_URI",
-    "NODE_ENV",
-    "LOG_LEVEL"
+  "PORT",
+  "MONGODB_URI",
+  "NODE_ENV",
+  "LOG_LEVEL",
+  "UPLOAD_DIR",
 ];
 
 requiredVariables.forEach((variable) => {
-    if (!process.env[variable]) {
-        throw new Error(`Falta la variable de entorno: ${variable}`);
-    }
+  if (!process.env[variable]) {
+    throw new Error(`Falta la variable de entorno: ${variable}`);
+  }
 });
 
 module.exports = {
-    PORT: process.env.PORT,
-    MONGODB_URI: process.env.MONGODB_URI,
-    NODE_ENV: process.env.NODE_ENV,
-    LOG_LEVEL: process.env.LOG_LEVEL
+  PORT: Number(process.env.PORT),
+  MONGODB_URI: process.env.MONGODB_URI,
+  NODE_ENV: process.env.NODE_ENV,
+  LOG_LEVEL: process.env.LOG_LEVEL,
+  UPLOAD_DIR: process.env.UPLOAD_DIR,
 };

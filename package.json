@@ -1,16 +1,28 @@
 {
   "name": "shipnow",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "API backend profesional para gestión de usuarios, productos, pedidos, entregas y documentación Swagger.",
+  "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "test": "cross-env NODE_ENV=test mocha"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "mongoose",
+    "swagger",
+    "multer",
+    "winston",
+    "shipnow"
+  ],
+  "author": "Shei",
   "license": "ISC",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
     "dotenv": "^17.4.2",
