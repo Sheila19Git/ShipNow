@@ -10,7 +10,11 @@ class OrderController {
 
       res.status(200).json({
         status: "success",
-        ...result
+        payload: result.orders,
+        total: result.total,
+        page: result.page,
+        limit: result.limit,
+        totalPages: result.totalPages
       });
     } catch (error) {
       next(error);

@@ -11,7 +11,6 @@ const Order = require("../src/models/Order");
 const Delivery = require("../src/models/Delivery");
 
 describe("ShipNow API", () => {
-
     before(async () => {
         await mongoose.connect(config.MONGODB_URI);
     });
@@ -64,6 +63,7 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(200);
         expect(response.body).to.be.an("object");
+
         expect(response.body).to.have.property(
             "message",
             "Logs de prueba generados correctamente"
@@ -93,10 +93,12 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(400);
         expect(response.body).to.have.property("status", "error");
+
         expect(response.body).to.have.property(
             "code",
             "INVALID_MOCK_QUANTITY"
         );
+
         expect(response.body).to.have.property(
             "message",
             "La cantidad de mocks debe ser un número entero mayor a 0"
@@ -128,10 +130,12 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(201);
         expect(response.body).to.have.property("_id");
+
         expect(response.body).to.have.property(
             "name",
             "Usuario Test ShipNow"
         );
+
         expect(response.body).to.have.property(
             "email",
             "test.shipnow@example.com"
@@ -147,10 +151,12 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(400);
         expect(response.body).to.have.property("status", "error");
+
         expect(response.body).to.have.property(
             "code",
             "INVALID_USER_DATA"
         );
+
         expect(response.body).to.have.property(
             "message",
             "El nombre y el email son obligatorios"
@@ -166,10 +172,12 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(404);
         expect(response.body).to.have.property("status", "error");
+
         expect(response.body).to.have.property(
             "code",
             "USER_NOT_FOUND"
         );
+
         expect(response.body).to.have.property(
             "message",
             "Usuario no encontrado"
@@ -201,6 +209,7 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(201);
         expect(response.body).to.have.property("status", "success");
+
         expect(response.body).to.have.property(
             "message",
             "Pedido creado correctamente"
@@ -208,16 +217,29 @@ describe("ShipNow API", () => {
     });
 
     it("GET /api/orders/:id debería consultar un pedido", async () => {
-        const fakeId = new mongoose.Types.ObjectId().toString();
+        const createdOrder = await Order.create({
+            user: new mongoose.Types.ObjectId(),
+            products: [
+                {
+                    product: new mongoose.Types.ObjectId(),
+                    quantity: 1
+                }
+            ]
+        });
 
         const response = await request(app).get(
-            `/api/orders/${fakeId}`
+            `/api/orders/${createdOrder._id}`
         );
 
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property("status", "success");
         expect(response.body).to.have.property("payload");
         expect(response.body.payload).to.be.an("object");
+
+        expect(response.body.payload).to.have.property(
+            "_id",
+            createdOrder._id.toString()
+        );
     });
 
     it("GET /api/deliveries debería obtener la lista de entregas", async () => {
@@ -239,6 +261,7 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(201);
         expect(response.body).to.have.property("status", "success");
+
         expect(response.body).to.have.property(
             "message",
             "Entrega creada"
@@ -255,6 +278,7 @@ describe("ShipNow API", () => {
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property("status", "success");
         expect(response.body).to.have.property("payload");
+
         expect(response.body.payload).to.have.property("id", fakeId);
     });
 
@@ -295,6 +319,7 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(400);
         expect(response.body).to.have.property("status", "error");
+
         expect(response.body).to.have.property(
             "code",
             "INVALID_MOCK_QUANTITY"
@@ -308,6 +333,7 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(400);
         expect(response.body).to.have.property("status", "error");
+
         expect(response.body).to.have.property(
             "code",
             "INVALID_MOCK_QUANTITY"
@@ -321,6 +347,7 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(400);
         expect(response.body).to.have.property("status", "error");
+
         expect(response.body).to.have.property(
             "code",
             "INVALID_MOCK_QUANTITY"
@@ -335,6 +362,7 @@ describe("ShipNow API", () => {
         expect(response.status).to.equal(201);
         expect(response.body).to.be.an("object");
         expect(response.body).to.have.property("insertados", 2);
+
         expect(response.body).to.have.property(
             "coleccion",
             "usuarios"
@@ -348,6 +376,7 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(400);
         expect(response.body).to.have.property("status", "error");
+
         expect(response.body).to.have.property(
             "code",
             "INVALID_MOCK_QUANTITY"
@@ -375,6 +404,7 @@ describe("ShipNow API", () => {
 
         expect(response.status).to.equal(400);
         expect(response.body).to.have.property("status", "error");
+
         expect(response.body).to.have.property(
             "code",
             "INVALID_MOCK_QUANTITY"
@@ -401,12 +431,15 @@ describe("ShipNow API", () => {
             );
 
         expect(response.status).to.equal(201);
+
         expect(response.body).to.have.property(
             "message",
             "Documento cargado correctamente"
         );
+
         expect(response.body.user).to.have.property("documents");
         expect(response.body.user.documents).to.have.lengthOf(1);
+
         expect(response.body.user.documents[0]).to.have.property(
             "documentType",
             "DNI"
@@ -429,10 +462,12 @@ describe("ShipNow API", () => {
             .field("documentType", "DNI");
 
         expect(response.status).to.equal(400);
+
         expect(response.body).to.have.property(
             "status",
             "error"
         );
+
         expect(response.body).to.have.property(
             "code",
             "FILE_REQUIRED"
@@ -463,10 +498,12 @@ describe("ShipNow API", () => {
             );
 
         expect(response.status).to.equal(400);
+
         expect(response.body).to.have.property(
             "status",
             "error"
         );
+
         expect(response.body).to.have.property(
             "code",
             "INVALID_DOCUMENT_TYPE"
@@ -489,10 +526,12 @@ describe("ShipNow API", () => {
             );
 
         expect(response.status).to.equal(404);
+
         expect(response.body).to.have.property(
             "status",
             "error"
         );
+
         expect(response.body).to.have.property(
             "code",
             "USER_NOT_FOUND"
@@ -633,5 +672,4 @@ describe("ShipNow API", () => {
             "DELIVERY_NOT_FOUND"
         );
     });
-
 });
