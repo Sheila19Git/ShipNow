@@ -360,7 +360,7 @@ y ejecuta la suite de Mocha.
 
 Resultado actual
 
-32 passing
+29 passing
 
 Cobertura
 
@@ -669,6 +669,15 @@ Health check.
 Swagger.
 
 Endpoint principal.
+
+## Ejecución con Docker Compose
+
+Docker Compose permite levantar la API junto con MongoDB.
+
+Desde la raíz del proyecto:
+
+```bash
+docker compose up -d --build
 
 Archivos que no deben subirse al repositorio
 
