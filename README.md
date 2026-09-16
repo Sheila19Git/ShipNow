@@ -1,38 +1,38 @@
-﻿ShipNow API
+ShipNow API
 
-API REST desarrollada con **Node.js, Express y MongoDB**, construida con arquitectura por capas. El proyecto incorpora mocking de datos, manejo centralizado de errores, logging profesional, documentación interactiva con Swagger/OpenAPI, carga de archivos, testing funcional automatizado y ejecución mediante Docker.
+API REST desarrollada con *Node.js, Express y MongoDB*, construida con arquitectura por capas. El proyecto incorpora mocking de datos, manejo centralizado de errores, logging profesional, documentación interactiva con Swagger/OpenAPI, carga de archivos, testing funcional automatizado y ejecución mediante Docker.
 
-## Tecnologías
+*## Tecnologías*
 
-- Node.js / Express
+\- Node.js / Express
 
-- MongoDB Atlas / Mongoose
+\- MongoDB Atlas / Mongoose
 
-- Faker — generación de datos simulados
+\- Faker — generación de datos simulados
 
-- Multer — carga y gestión de archivos
+\- Multer — carga y gestión de archivos
 
-- Winston / Winston Daily Rotate File — logging
+\- Winston / Winston Daily Rotate File — logging
 
-- Swagger UI + JSDoc — documentación interactiva
+\- Swagger UI + JSDoc — documentación interactiva
 
-- Mocha — ejecución de tests
+\- Mocha — ejecución de tests
 
-- Chai — aserciones
+\- Chai — aserciones
 
-- Supertest — pruebas HTTP
+\- Supertest — pruebas HTTP
 
-- Cross-env — configuración del entorno de testing
+\- Cross-env — configuración del entorno de testing
 
-- Dotenv
+\- Dotenv
 
-- Nodemon
+\- Nodemon
 
-- Docker
+\- Docker
 
-## Cómo ejecutar
+*## Cómo ejecutar*
 
-### 1. Clonar el repositorio
+*### 1. Clonar el repositorio*
 
 ```bash
 
@@ -676,56 +676,50 @@ Docker Compose permite levantar la API junto con MongoDB.
 
 Desde la raíz del proyecto:
 
-````md
 ```bash
 docker compose up -d --build
 ```
 
-Archivos que no deben subirse al repositorio
+## Archivos que no deben subirse al repositorio
 
 Los siguientes archivos y directorios contienen información sensible, generada o temporal:
 
-.env
+- `.env`
+- `.env.*`
+- `node_modules/`
+- `.git/`
+- `logs/`
+- `uploads/`
+- `coverage/`
+- `.nyc_output/`
+- `*.tmp`
+- `*.temp`
 
-.env.*
+Los archivos `.env` pueden contener credenciales o información específica del entorno y deben mantenerse fuera del repositorio.
 
-node_modules/
+## Logs y uploads
 
-.git/
-
-logs/
-
-uploads/
-
-coverage/
-
-.nyc_output/
-
-*.tmp
-
-*.temp
-
-Los archivos .env pueden contener credenciales o información específica del entorno y deben mantenerse fuera del repositorio.
-
-Logs y uploads
-
-Logs
+### Logs
 
 Los logs se generan mediante Winston.
 
 Los errores se almacenan mediante rotación diaria:
 
+```text
 logs/error-YYYY-MM-DD.log
+```
 
-La carpeta logs/ no se incluye en el repositorio ni en la imagen Docker.
+La carpeta `logs/` no se incluye en el repositorio ni en la imagen Docker.
 
-Uploads
+### Uploads
 
 Los archivos cargados mediante Multer se almacenan fuera del repositorio.
 
 El directorio puede configurarse mediante:
 
+```env
 UPLOAD_DIR=/ruta/del/directorio
+```
 
 Los uploads generados no se incluyen en la imagen Docker.
 
@@ -735,84 +729,55 @@ La suite funcional completa se ejecuta correctamente:
 
 ```text
 29 passing
+```
 
 La aplicación también fue ejecutada mediante Docker verificando correctamente:
 
-Conexión a MongoDB establecida.
+- Conexión a MongoDB establecida.
+- Servidor ShipNow escuchando en el puerto 8080.
+- Health Check funcionando correctamente desde el contenedor.
+- Acceso a Swagger/OpenAPI.
+- Acceso a los endpoints principales.
 
-Servidor ShipNow escuchando en el puerto 8080.
-
-Health Check funcionando correctamente desde el contenedor.
-
-Acceso a Swagger/OpenAPI.
-
-Acceso a los endpoints principales.
-
-Entrega Final — ShipNow API
+## Entrega Final — ShipNow API
 
 En esta entrega final se integran las funcionalidades desarrolladas durante los distintos módulos del proyecto:
 
-Arquitectura por capas.
+- Arquitectura por capas.
+- Gestión de usuarios.
+- Gestión de productos.
+- Gestión de pedidos.
+- Gestión de entregas.
+- Generación de datos simulados con Faker.
+- Persistencia de mocks en MongoDB.
+- Manejo centralizado de errores.
+- Errores personalizados y diccionario de errores.
+- Logging profesional con Winston.
+- Documentación interactiva mediante Swagger/OpenAPI.
+- Testing funcional automatizado con Mocha, Chai y Supertest.
+- Paginación y límites en los listados.
+- Carga de documentos de usuarios.
+- Carga de comprobantes de entregas.
+- Validación de archivos y tipos MIME.
+- Validación de variables de entorno.
+- Health Check.
+- Separación de entornos de desarrollo y testing.
+- Configuración mediante archivos `.env`.
+- Dockerfile.
+- `.dockerignore`.
+- Ejecución de la API mediante Docker.
+- Ejecución conjunta de la API y MongoDB mediante Docker Compose.
+- Protección de archivos sensibles, logs y uploads.
 
-Gestión de usuarios.
-
-Gestión de productos.
-
-Gestión de pedidos.
-
-Gestión de entregas.
-
-Generación de datos simulados con Faker.
-
-Persistencia de mocks en MongoDB.
-
-Manejo centralizado de errores.
-
-Errores personalizados y diccionario de errores.
-
-Logging profesional con Winston.
-
-Documentación interactiva mediante Swagger/OpenAPI.
-
-Testing funcional automatizado con Mocha, Chai y Supertest.
-
-Paginación y límites en los listados.
-
-Carga de documentos de usuarios.
-
-Carga de comprobantes de entregas.
-
-Validación de archivos y tipos MIME.
-
-Validación de variables de entorno.
-
-Health Check.
-
-Separación de entornos de desarrollo y testing.
-
-Configuración mediante archivos .env.
-
-Dockerfile.
-
-.dockerignore.
-
-Ejecución de la API mediante Docker.
-
-Ejecución conjunta de la API y MongoDB mediante Docker Compose.
-
-Protección de archivos sensibles, logs y uploads.
-
-Accesos principales
+### Accesos principales
 
 Con la aplicación ejecutándose localmente:
 
-API: http://localhost:8080
+- API: `http://localhost:8080`
+- Health Check: `http://localhost:8080/health`
+- Swagger/OpenAPI: `http://localhost:8080/api/docs`
 
-Health Check: http://localhost:8080/health
-
-Swagger/OpenAPI: http://localhost:8080/api/docs
-
-Autora
+## Autora
 
 Sheila Magali Chiesa
 
