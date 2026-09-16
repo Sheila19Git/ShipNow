@@ -676,8 +676,10 @@ Docker Compose permite levantar la API junto con MongoDB.
 
 Desde la raíz del proyecto:
 
+````md
 ```bash
 docker compose up -d --build
+```
 
 Archivos que no deben subirse al repositorio
 
