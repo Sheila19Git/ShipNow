@@ -731,7 +731,7 @@ Resultados de testing
 
 La suite funcional completa se ejecuta correctamente:
 
-32 passing
+29 passing
 
 La aplicación también fue ejecutada mediante Docker verificando correctamente:
 
