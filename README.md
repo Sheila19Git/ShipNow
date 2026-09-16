@@ -727,37 +727,68 @@ UPLOAD_DIR=/ruta/del/directorio
 
 Los uploads generados no se incluyen en la imagen Docker.
 
-Resultados de testing
+## Resultados de testing
 
 La suite funcional completa se ejecuta correctamente:
 
+```text
 29 passing
 
 La aplicación también fue ejecutada mediante Docker verificando correctamente:
 
-Conexión a MongoDB establecida
+Conexión a MongoDB establecida.
 
-Servidor ShipNow escuchando en el puerto 8080
+Servidor ShipNow escuchando en el puerto 8080.
 
-El health check respondió correctamente desde el contenedor.
+Health Check funcionando correctamente desde el contenedor.
 
-Pre-entrega Módulo 8
+Acceso a Swagger/OpenAPI.
 
-En esta pre-entrega se incorporaron:
+Acceso a los endpoints principales.
 
-Buenas prácticas básicas de performance.
+Entrega Final — ShipNow API
 
-Paginación y límites en listados.
+En esta entrega final se integran las funcionalidades desarrolladas durante los distintos módulos del proyecto:
 
-Límites y validación de archivos.
+Arquitectura por capas.
 
-Configuración mediante variables de entorno.
+Gestión de usuarios.
 
-Validación de variables críticas al iniciar.
+Gestión de productos.
 
-Health check.
+Gestión de pedidos.
 
-Criterio de exposición de endpoints internos.
+Gestión de entregas.
+
+Generación de datos simulados con Faker.
+
+Persistencia de mocks en MongoDB.
+
+Manejo centralizado de errores.
+
+Errores personalizados y diccionario de errores.
+
+Logging profesional con Winston.
+
+Documentación interactiva mediante Swagger/OpenAPI.
+
+Testing funcional automatizado con Mocha, Chai y Supertest.
+
+Paginación y límites en los listados.
+
+Carga de documentos de usuarios.
+
+Carga de comprobantes de entregas.
+
+Validación de archivos y tipos MIME.
+
+Validación de variables de entorno.
+
+Health Check.
+
+Separación de entornos de desarrollo y testing.
+
+Configuración mediante archivos .env.
 
 Dockerfile.
 
@@ -765,10 +796,22 @@ Dockerfile.
 
 Ejecución de la API mediante Docker.
 
-Documentación de producción y Docker en README.
+Ejecución conjunta de la API y MongoDB mediante Docker Compose.
+
+Protección de archivos sensibles, logs y uploads.
+
+Accesos principales
+
+Con la aplicación ejecutándose localmente:
+
+API: http://localhost:8080
+
+Health Check: http://localhost:8080/health
+
+Swagger/OpenAPI: http://localhost:8080/api/docs
 
 Autora
 
 Sheila Magali Chiesa
 
-Pre-entrega Módulos 2, 3, 4, 5, 6, 7 y 8.
+Proyecto final — ShipNow API
