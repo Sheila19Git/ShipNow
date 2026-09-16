@@ -1,11 +1,8 @@
 const productService = require("../services/product.service");
 
 class ProductController {
-
     async getAll(req, res, next) {
-
         try {
-
             const page = Number(req.query.page) || 1;
             const limit = Number(req.query.limit) || 10;
 
@@ -14,85 +11,62 @@ class ProductController {
                 limit
             );
 
-            res.json(products);
-
+            return res.status(200).json(products);
         } catch (error) {
-
             next(error);
-
         }
-
     }
 
     async getById(req, res, next) {
-
         try {
+            const { id } = req.params;
 
-            const product = await productService.getProductById(
-                req.params.id
-            );
+            const product = await productService.getProductById(id);
 
-            res.json(product);
-
+            return res.status(200).json(product);
         } catch (error) {
-
             next(error);
-
         }
-
     }
 
     async create(req, res, next) {
-
         try {
-
             const product = await productService.createProduct(req.body);
 
-            res.status(201).json(product);
-
+            return res.status(201).json(product);
         } catch (error) {
-
             next(error);
-
         }
-
     }
 
     async update(req, res, next) {
-
         try {
+            const { id } = req.params;
 
             const product = await productService.updateProduct(
-                req.params.id,
+                id,
                 req.body
             );
 
-            res.json(product);
-
+            return res.status(200).json(product);
         } catch (error) {
-
             next(error);
-
         }
-
     }
 
     async delete(req, res, next) {
-
         try {
+            const { id } = req.params;
 
-            await productService.deleteProduct(req.params.id);
+            await productService.deleteProduct(id);
 
-            res.json({ message: "Producto eliminado" });
-
+            return res.status(200).json({
+                message: "Producto eliminado"
+            });
         } catch (error) {
-
             next(error);
-
         }
-
     }
-
 }
 
 module.exports = new ProductController();

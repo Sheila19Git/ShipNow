@@ -7,6 +7,7 @@ class UserNotFoundError extends CustomError {
             "USER_NOT_FOUND",
             404
         );
+
         this.name = "UserNotFoundError";
     }
 }
@@ -18,7 +19,20 @@ class OrderNotFoundError extends CustomError {
             "ORDER_NOT_FOUND",
             404
         );
+
         this.name = "OrderNotFoundError";
+    }
+}
+
+class ProductNotFoundError extends CustomError {
+    constructor() {
+        super(
+            "Producto no encontrado",
+            "PRODUCT_NOT_FOUND",
+            404
+        );
+
+        this.name = "ProductNotFoundError";
     }
 }
 
@@ -29,6 +43,7 @@ class InvalidStatusError extends CustomError {
             "INVALID_STATUS",
             400
         );
+
         this.name = "InvalidStatusError";
     }
 }
@@ -40,6 +55,7 @@ class InvalidMockQuantityError extends CustomError {
             "INVALID_MOCK_QUANTITY",
             400
         );
+
         this.name = "InvalidMockQuantityError";
     }
 }
@@ -51,6 +67,7 @@ class InvalidProductDataError extends CustomError {
             "INVALID_PRODUCT_DATA",
             400
         );
+
         this.name = "InvalidProductDataError";
     }
 }
@@ -62,6 +79,7 @@ class InvalidUserDataError extends CustomError {
             "INVALID_USER_DATA",
             400
         );
+
         this.name = "InvalidUserDataError";
     }
 }
@@ -73,6 +91,7 @@ class FileRequiredError extends CustomError {
             "FILE_REQUIRED",
             400
         );
+
         this.name = "FileRequiredError";
     }
 }
@@ -84,6 +103,7 @@ class InvalidFileTypeError extends CustomError {
             "INVALID_FILE_TYPE",
             400
         );
+
         this.name = "InvalidFileTypeError";
     }
 }
@@ -95,6 +115,7 @@ class FileTooLargeError extends CustomError {
             "FILE_TOO_LARGE",
             413
         );
+
         this.name = "FileTooLargeError";
     }
 }
@@ -106,6 +127,7 @@ class InvalidDocumentTypeError extends CustomError {
             "INVALID_DOCUMENT_TYPE",
             400
         );
+
         this.name = "InvalidDocumentTypeError";
     }
 }
@@ -117,6 +139,7 @@ class DeliveryNotFoundError extends CustomError {
             "DELIVERY_NOT_FOUND",
             404
         );
+
         this.name = "DeliveryNotFoundError";
     }
 }
@@ -128,6 +151,7 @@ class FileSaveError extends CustomError {
             "FILE_SAVE_ERROR",
             500
         );
+
         this.name = "FileSaveError";
     }
 }
@@ -135,6 +159,7 @@ class FileSaveError extends CustomError {
 module.exports = {
     UserNotFoundError,
     OrderNotFoundError,
+    ProductNotFoundError,
     InvalidStatusError,
     InvalidMockQuantityError,
     InvalidProductDataError,

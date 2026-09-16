@@ -1,10 +1,9 @@
 const Product = require("../models/Product");
 
 class ProductRepository {
-
     async getAll(page = 1, limit = 10) {
-
         const safePage = Math.max(Number(page) || 1, 1);
+
         const safeLimit = Math.min(
             Math.max(Number(limit) || 10, 1),
             50
@@ -26,17 +25,20 @@ class ProductRepository {
     }
 
     async update(id, data) {
-        return await Product.findByIdAndUpdate(
-            id,
-            data,
-           { returnDocument: "after" }
-        );
+        const product = await Product.findById(id);
+
+        if (!product) {
+            return null;
+        }
+
+        Object.assign(product, data);
+
+        return await product.save();
     }
 
     async delete(id) {
         return await Product.findByIdAndDelete(id);
     }
-
 }
 
 module.exports = new ProductRepository();

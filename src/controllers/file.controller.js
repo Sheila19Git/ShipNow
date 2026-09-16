@@ -1,14 +1,13 @@
 const userService = require("../services/user.service");
 const deliveryService = require("../services/delivery.service");
 const logger = require("../config/logger");
+const { FileRequiredError } = require("../errors/domain.errors");
 
 class FileController {
     async uploadUserDocument(req, res, next) {
         try {
             if (!req.file) {
-                const error = new Error("El archivo es obligatorio");
-                error.code = "FILE_REQUIRED";
-                throw error;
+                throw new FileRequiredError();
             }
 
             const documentData = {
@@ -17,7 +16,7 @@ class FileController {
                 path: req.file.path,
                 mimeType: req.file.mimetype,
                 size: req.file.size,
-                documentType: req.body.documentType
+                documentType: req.body.documentType,
             };
 
             const user = await userService.addDocument(
@@ -34,9 +33,7 @@ class FileController {
             if (safeUser.documents) {
                 safeUser.documents = safeUser.documents.map((document) => {
                     const safeDocument = { ...document };
-
                     delete safeDocument.path;
-
                     return safeDocument;
                 });
             }
@@ -44,7 +41,7 @@ class FileController {
             res.status(201).json({
                 status: "success",
                 message: "Documento cargado correctamente",
-                user: safeUser
+                user: safeUser,
             });
         } catch (error) {
             logger.warning(
@@ -58,9 +55,7 @@ class FileController {
     async uploadDeliveryReceipt(req, res, next) {
         try {
             if (!req.file) {
-                const error = new Error("El archivo es obligatorio");
-                error.code = "FILE_REQUIRED";
-                throw error;
+                throw new FileRequiredError();
             }
 
             const receiptData = {
@@ -68,7 +63,7 @@ class FileController {
                 generatedName: req.file.filename,
                 path: req.file.path,
                 mimeType: req.file.mimetype,
-                size: req.file.size
+                size: req.file.size,
             };
 
             const delivery = await deliveryService.addReceipt(
@@ -89,7 +84,7 @@ class FileController {
             res.status(200).json({
                 status: "success",
                 message: "Comprobante cargado correctamente",
-                delivery: safeDelivery
+                delivery: safeDelivery,
             });
         } catch (error) {
             logger.warning(
