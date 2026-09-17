@@ -11,8 +11,22 @@ const Order = require("../src/models/Order");
 const Delivery = require("../src/models/Delivery");
 
 describe("ShipNow API", () => {
+
     before(async () => {
+
         await mongoose.connect(config.MONGODB_URI);
+
+    });
+
+    it("GET /health debería devolver el estado correcto de la API", async () => {
+        const response = await request(app)
+            .get("/health")
+            .expect(200);
+
+        expect(response.body.status).to.equal("success");
+        expect(response.body.message).to.equal("Health check OK");
+        expect(response.body.environment).to.equal("test");
+        expect(response.body.uptime).to.be.a("number");
     });
 
     after(async () => {
@@ -502,6 +516,72 @@ describe("ShipNow API", () => {
         expect(response.body).to.have.property(
             "code",
             "INVALID_DOCUMENT_TYPE"
+        );
+    });
+     it("POST /api/users/:userId/documents debería devolver error con archivo de tipo MIME inválido", async () => {
+        const user = await User.findOne({
+            email: "document.test@example.com"
+        });
+
+        const response = await request(app)
+            .post(`/api/users/${user._id}/documents`)
+            .field("documentType", "DNI")
+            .attach(
+                "document",
+                Buffer.from("contenido de prueba"),
+                {
+                    filename: "documento-test.txt",
+                    contentType: "text/plain"
+                }
+            );
+
+        expect(response.status).to.equal(400);
+
+        expect(response.body).to.have.property(
+            "status",
+            "error"
+        );
+
+        expect(response.body).to.have.property(
+            "code",
+            "INVALID_FILE_TYPE"
+        );
+
+        expect(response.body).to.have.property(
+            "message",
+            "Tipo de archivo no permitido"
+        );
+    });
+    
+        it("POST /api/users/:userId/documents debería devolver error si el archivo supera los 5 MB", async () => {
+        const user = await User.findOne({
+            email: "document.test@example.com"
+        });
+
+        const largeFile = Buffer.alloc(6 * 1024 * 1024);
+
+        const response = await request(app)
+            .post(`/api/users/${user._id}/documents`)
+            .field("documentType", "DNI")
+            .attach(
+                "document",
+                largeFile,
+                {
+                    filename: "documento-grande.pdf",
+                    contentType: "application/pdf"
+                }
+            );
+
+        expect(response.status).to.equal(413);
+
+        expect(response.body).to.have.property(
+            "status",
+            "error"
+        );
+
+        expect(response.body).to.have.property(
+            "code",
+            "FILE_TOO_LARGE"
         );
     });
 
