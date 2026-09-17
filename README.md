@@ -1,28 +1,28 @@
-ShipNow API
+﻿ShipNow API
 
-API REST desarrollada con *Node.js, Express y MongoDB*, construida con arquitectura por capas. El proyecto incorpora mocking de datos, manejo centralizado de errores, logging profesional, documentación interactiva con Swagger/OpenAPI, carga de archivos, testing funcional automatizado y ejecución mediante Docker.
+API REST desarrollada con *Node.js, Express y MongoDB*, construida con arquitectura por capas. El proyecto incorpora mocking de datos, manejo centralizado de errores, logging profesional, documentaciÃ³n interactiva con Swagger/OpenAPI, carga de archivos, testing funcional automatizado y ejecuciÃ³n mediante Docker.
 
-## Tecnologías
+## TecnologÃ­as
 
 \- Node.js / Express
 
 \- MongoDB Atlas / Mongoose
 
-\- Faker — generación de datos simulados
+\- Faker â€” generaciÃ³n de datos simulados
 
-\- Multer — carga y gestión de archivos
+\- Multer â€” carga y gestiÃ³n de archivos
 
-\- Winston / Winston Daily Rotate File — logging
+\- Winston / Winston Daily Rotate File â€” logging
 
-\- Swagger UI + JSDoc — documentación interactiva
+\- Swagger UI + JSDoc â€” documentaciÃ³n interactiva
 
-\- Mocha — ejecución de tests
+\- Mocha â€” ejecuciÃ³n de tests
 
-\- Chai — aserciones
+\- Chai â€” aserciones
 
-\- Supertest — pruebas HTTP
+\- Supertest â€” pruebas HTTP
 
-\- Cross-env — configuración del entorno de testing
+\- Cross-env â€” configuraciÃ³n del entorno de testing
 
 \- Dotenv
 
@@ -30,10 +30,10 @@ API REST desarrollada con *Node.js, Express y MongoDB*, construida con arquitect
 
 \- Docker
 
-## Cómo ejecutar
+## CÃ³mo ejecutar
 
 ### 1. Clonar el repositorio
-### Cómo ejecutar
+### CÃ³mo ejecutar
 
 ### 1. Clonar el repositorio
 
@@ -50,7 +50,7 @@ npm install
 
 ### 3. Configurar variables de entorno
 
-Crear un archivo `.env` basándose en `.env.example`.
+Crear un archivo `.env` basÃ¡ndose en `.env.example`.
 
 Variables requeridas:
 
@@ -61,11 +61,11 @@ NODE_ENV=development
 LOG_LEVEL=info
 ```
 
-Las variables sensibles, como la URI de MongoDB, no deben escribirse directamente en el código ni subirse al repositorio.
+Las variables sensibles, como la URI de MongoDB, no deben escribirse directamente en el cÃ³digo ni subirse al repositorio.
 
-La aplicación valida las variables críticas al iniciar y no arranca si falta alguna de ellas.
+La aplicaciÃ³n valida las variables crÃ­ticas al iniciar y no arranca si falta alguna de ellas.
 
-Variables críticas:
+Variables crÃ­ticas:
 
 - `PORT`
 - `MONGODB_URI`
@@ -79,7 +79,7 @@ Para desarrollo:
 npm run dev
 ```
 
-Para ejecución normal:
+Para ejecuciÃ³n normal:
 
 ```
 npm start
@@ -111,23 +111,23 @@ http://localhost:8080/health
 }
 ```
 
-El endpoint permite verificar el estado de la API sin exponer información sensible.
+El endpoint permite verificar el estado de la API sin exponer informaciÃ³n sensible.
 
 ## Swagger / OpenAPI
 
-La documentación interactiva de la API está disponible en:
+La documentaciÃ³n interactiva de la API estÃ¡ disponible en:
 
 [http://localhost:8080/api/docs](http://localhost:8080/api/docs)
 
 Con el servidor iniciado, Swagger UI permite consultar y probar los endpoints documentados.
 
-La configuración de Swagger se encuentra separada de la lógica de las rutas en:
+La configuraciÃ³n de Swagger se encuentra separada de la lÃ³gica de las rutas en:
 
 ```text
 src/config/swagger/swagger.js
 ```
 
-### Módulos documentados
+### MÃ³dulos documentados
 
 - Users
 - Products
@@ -152,11 +152,11 @@ src/config/swagger/swagger.js
 | Capa | Responsabilidad |
 |---|---|
 | Routes | Conectan las rutas con los controllers |
-| Controllers | Reciben peticiones y envían respuestas |
-| Services | Contienen la lógica de negocio |
+| Controllers | Reciben peticiones y envÃ­an respuestas |
+| Services | Contienen la lÃ³gica de negocio |
 | Repositories | Gestionan el acceso a MongoDB |
 | Models | Definen la estructura de los datos |
-| Config | Configuración de MongoDB, variables de entorno, Swagger, logger y Multer |
+| Config | ConfiguraciÃ³n de MongoDB, variables de entorno, Swagger, logger y Multer |
 | Utils | Funciones auxiliares y generadores de mocks |
 | Errors | Errores personalizados y middleware global |
 
@@ -166,13 +166,13 @@ Se aplicaron medidas para evitar respuestas y operaciones innecesariamente grand
 
 ### Usuarios
 
-El listado de usuarios utiliza paginación mediante los parámetros:
+El listado de usuarios utiliza paginaciÃ³n mediante los parÃ¡metros:
 
 - `page`
 - `limit`
 ### Usuarios
 
-El listado de usuarios utiliza paginación mediante los parámetros:
+El listado de usuarios utiliza paginaciÃ³n mediante los parÃ¡metros:
 
 - `page`
 - `limit`
@@ -183,11 +183,11 @@ Ejemplo:
 GET /api/users?page=1&limit=10
 ```
 
-El repositorio aplica un límite máximo de resultados para evitar solicitudes excesivas.
+El repositorio aplica un lÃ­mite mÃ¡ximo de resultados para evitar solicitudes excesivas.
 
 ### Productos
 
-El listado de productos utiliza paginación y límite de resultados.
+El listado de productos utiliza paginaciÃ³n y lÃ­mite de resultados.
 
 Ejemplo:
 
@@ -197,7 +197,7 @@ GET /api/products?page=1&limit=10
 
 ### Pedidos
 
-El listado de pedidos utiliza paginación y límite de resultados.
+El listado de pedidos utiliza paginaciÃ³n y lÃ­mite de resultados.
 
 Ejemplo:
 
@@ -205,11 +205,11 @@ Ejemplo:
 GET /api/orders?page=1&limit=10
 ```
 
-El repositorio aplica un límite máximo de resultados para evitar solicitudes excesivas.
+El repositorio aplica un lÃ­mite mÃ¡ximo de resultados para evitar solicitudes excesivas.
 
 ### Entregas
 
-El listado de entregas utiliza paginación y límite de resultados.
+El listado de entregas utiliza paginaciÃ³n y lÃ­mite de resultados.
 
 Ejemplo:
 
@@ -217,19 +217,19 @@ Ejemplo:
 GET /api/deliveries?page=1&limit=10
 ```
 
-El repositorio aplica un límite máximo de resultados para evitar solicitudes excesivas.
+El repositorio aplica un lÃ­mite mÃ¡ximo de resultados para evitar solicitudes excesivas.
 
 ### Archivos
 
-La carga de archivos está limitada a un tamaño máximo de **5 MB** y restringida a determinados tipos MIME.
+La carga de archivos estÃ¡ limitada a un tamaÃ±o mÃ¡ximo de **5 MB** y restringida a determinados tipos MIME.
 
 Los errores relacionados con archivos son procesados mediante el middleware centralizado.
 
-## Módulo 2 — Mocking
+## MÃ³dulo 2 â€” Mocking
 
-Generación de datos simulados con Faker, con opción de persistirlos en MongoDB.
+GeneraciÃ³n de datos simulados con Faker, con opciÃ³n de persistirlos en MongoDB.
 
-| Método | Endpoint | Descripción |
+| MÃ©todo | Endpoint | DescripciÃ³n |
 |---|---|---|
 | GET | `/api/mocks/users?qty=3` | Genera usuarios mock sin guardar |
 | GET | `/api/mocks/couriers?qty=3` | Genera repartidores mock sin guardar |
@@ -238,8 +238,8 @@ Generación de datos simulados con Faker, con opción de persistirlos en MongoDB
 | POST | `/api/mocks/seed/users?qty=10` | Inserta usuarios mock en MongoDB |
 | POST | `/api/mocks/seed?qty=10` | Inserta datos mock completos en MongoDB |
 
-El parámetro `qty` representa la cantidad de datos a generar o insertar.
-## Módulo 3 — Manejo de errores
+El parÃ¡metro `qty` representa la cantidad de datos a generar o insertar.
+## MÃ³dulo 3 â€” Manejo de errores
 
 Sistema centralizado con errores personalizados, diccionario de errores y middleware global.
 
@@ -259,7 +259,7 @@ Sistema centralizado con errores personalizados, diccionario de errores y middle
 - `INVALID_FILE_FIELD`
 - `INTERNAL_SERVER_ERROR`
 
-## Módulo 4 — Logging
+## MÃ³dulo 4 â€” Logging
 
 Sistema de logging implementado con Winston.
 
@@ -287,15 +287,15 @@ La carpeta `logs/` se encuentra incluida en `.gitignore` y `.dockerignore`.
 ```http
 GET /api/logger/test
 ```
-Este endpoint se utiliza como herramienta de validación del sistema de logging y no representa una funcionalidad de negocio.
+Este endpoint se utiliza como herramienta de validaciÃ³n del sistema de logging y no representa una funcionalidad de negocio.
 
-## Módulo 5 — Documentación con Swagger
+## MÃ³dulo 5 â€” DocumentaciÃ³n con Swagger
 
-La documentación interactiva de la API se encuentra disponible en:
+La documentaciÃ³n interactiva de la API se encuentra disponible en:
 
 <http://localhost:8080/api/docs>
 
-Swagger está organizado mediante tags para facilitar la navegación:
+Swagger estÃ¡ organizado mediante tags para facilitar la navegaciÃ³n:
 
 - `Users`
 - `Orders`
@@ -304,16 +304,16 @@ Swagger está organizado mediante tags para facilitar la navegación:
 - `Logger`
 - `Products`
 
-La documentación incluye:
+La documentaciÃ³n incluye:
 
-- Métodos HTTP.
+- MÃ©todos HTTP.
 - Rutas.
-- Parámetros.
+- ParÃ¡metros.
 - Cuerpos de solicitud cuando corresponde.
 - Respuestas exitosas.
 - Respuestas de error.
 
-## Módulo 6 — Testing funcional
+## MÃ³dulo 6 â€” Testing funcional
 
 El proyecto incorpora una suite de tests funcionales automatizados utilizando **Mocha**, **Chai** y **Supertest**.
 
@@ -337,7 +337,7 @@ El archivo `.env.test` se encuentra incluido en `.gitignore` y no debe subirse a
 npm test
 ```
 
-El script configura automáticamente:
+El script configura automÃ¡ticamente:
 
 ```text
 NODE_ENV=test
@@ -348,7 +348,7 @@ y ejecuta la suite de Mocha.
 ### Resultado actual
 
 ```text
-30 passing
+33 passing
 ```
 
 ### Cobertura
@@ -360,35 +360,35 @@ La suite valida:
 - Usuarios.
 - Pedidos.
 - Entregas.
-- Generación de mocks.
-- Inserción de usuarios mock.
-- Inserción de datos mock completos.
-- Cantidades inválidas de mocks.
-- Datos inválidos de usuarios.
+- GeneraciÃ³n de mocks.
+- InserciÃ³n de usuarios mock.
+- InserciÃ³n de datos mock completos.
+- Cantidades invÃ¡lidas de mocks.
+- Datos invÃ¡lidos de usuarios.
 - Recursos inexistentes.
 - Rutas inexistentes.
 - Carga de documentos de usuarios.
-- Validación de archivo obligatorio.
-- Validación de tipo de documento.
+- ValidaciÃ³n de archivo obligatorio.
+- ValidaciÃ³n de tipo de documento.
 - Carga de comprobantes de entregas.
-- Validación de comprobante obligatorio.
-- Validación de entregas inexistentes.
+- ValidaciÃ³n de comprobante obligatorio.
+- ValidaciÃ³n de entregas inexistentes.
 
 Los tests verifican tanto el status HTTP como la estructura y las propiedades importantes del body.
 
-## Módulo 7 — Carga de archivos, documentos y comprobantes
+## MÃ³dulo 7 â€” Carga de archivos, documentos y comprobantes
 
-Se implementó un sistema de carga de archivos utilizando Multer.
+Se implementÃ³ un sistema de carga de archivos utilizando Multer.
 
 La funcionalidad permite:
 
 - Cargar documentos asociados a usuarios.
 - Cargar comprobantes asociados a entregas.
 - Validar el tipo MIME de los archivos.
-- Limitar el tamaño máximo de los archivos.
-- Generar nombres únicos para los archivos.
+- Limitar el tamaÃ±o mÃ¡ximo de los archivos.
+- Generar nombres Ãºnicos para los archivos.
 - Separar los archivos de usuarios y entregas en directorios diferentes.
-- Registrar la información del archivo en MongoDB.
+- Registrar la informaciÃ³n del archivo en MongoDB.
 - Manejar errores mediante el sistema centralizado.
 
 ### Tipos de archivo permitidos
@@ -397,7 +397,7 @@ La funcionalidad permite:
 - JPG / JPEG
 - PNG
 
-### Tamaño máximo
+### TamaÃ±o mÃ¡ximo
 
 ```text
 5 MB
@@ -405,7 +405,7 @@ La funcionalidad permite:
 
 ### Directorio de almacenamiento
 
-Los archivos se almacenan mediante un directorio configurable a través de `UPLOAD_DIR`.
+Los archivos se almacenan mediante un directorio configurable a travÃ©s de `UPLOAD_DIR`.
 
 Si no se especifica, se utiliza un directorio temporal del sistema.
 
@@ -471,57 +471,57 @@ Ejemplo de respuesta:
 }
 ```
 
-También se controlan:
+TambiÃ©n se controlan:
 
 - Archivos demasiado grandes.
 - Tipos MIME no permitidos.
 - Campos de archivo no permitidos.
 - Archivos faltantes.
 
-## Módulo 8 — Performance, escalabilidad y Docker
+## MÃ³dulo 8 â€” Performance, escalabilidad y Docker
 
-En este módulo se preparó ShipNow para una ejecución más estable y cercana a un entorno de producción.
+En este mÃ³dulo se preparÃ³ ShipNow para una ejecuciÃ³n mÃ¡s estable y cercana a un entorno de producciÃ³n.
 
 Se incorporaron:
 
-- Control de listados mediante paginación y límites.
-- Límites de tamaño y tipos de archivo.
-- Validación de variables de entorno.
+- Control de listados mediante paginaciÃ³n y lÃ­mites.
+- LÃ­mites de tamaÃ±o y tipos de archivo.
+- ValidaciÃ³n de variables de entorno.
 - Health check.
-- Criterio de exposición de endpoints internos.
+- Criterio de exposiciÃ³n de endpoints internos.
 - Dockerfile.
 - `.dockerignore`.
-- Ejecución de la API dentro de un contenedor Docker.
-- Documentación de ejecución y despliegue básico.
+- EjecuciÃ³n de la API dentro de un contenedor Docker.
+- DocumentaciÃ³n de ejecuciÃ³n y despliegue bÃ¡sico.
 
-### Preparación para producción
+### PreparaciÃ³n para producciÃ³n
 
-La aplicación utiliza variables de entorno para separar la configuración del código.
+La aplicaciÃ³n utiliza variables de entorno para separar la configuraciÃ³n del cÃ³digo.
 
-Las variables críticas son validadas durante el inicio:
+Las variables crÃ­ticas son validadas durante el inicio:
 
 - `PORT`
 - `MONGODB_URI`
 - `NODE_ENV`
 - `LOG_LEVEL`
 
-Si alguna variable requerida no está definida, la aplicación falla durante el inicio mostrando un mensaje claro.
+Si alguna variable requerida no estÃ¡ definida, la aplicaciÃ³n falla durante el inicio mostrando un mensaje claro.
 
-Los valores sensibles no se encuentran escritos directamente en el código.
+Los valores sensibles no se encuentran escritos directamente en el cÃ³digo.
 
 ### Endpoints internos
 
 Los endpoints utilizados exclusivamente para desarrollo y testing tienen el siguiente criterio:
 
-- Swagger está disponible en `development` y `test`.
-- Mocks están disponibles en `development` y `test`.
-- Logger de prueba está disponible en `development` y `test`.
+- Swagger estÃ¡ disponible en `development` y `test`.
+- Mocks estÃ¡n disponibles en `development` y `test`.
+- Logger de prueba estÃ¡ disponible en `development` y `test`.
 
 Estos endpoints internos no se exponen en `production`.
 
 El endpoint `/health` permanece disponible para verificar el estado de la API.
 
-Este criterio permite utilizar herramientas de desarrollo y testing sin exponerlas innecesariamente en producción.
+Este criterio permite utilizar herramientas de desarrollo y testing sin exponerlas innecesariamente en producciÃ³n.
 
 ### Docker
 
@@ -529,7 +529,7 @@ La API puede ejecutarse dentro de un contenedor Docker.
 
 #### Dockerfile
 
-El proyecto incluye un `Dockerfile` en la raíz del repositorio.
+El proyecto incluye un `Dockerfile` en la raÃ­z del repositorio.
 
 El Dockerfile:
 
@@ -537,8 +537,8 @@ El Dockerfile:
 - Define `/app` como directorio de trabajo.
 - Copia los archivos necesarios del proyecto.
 - Instala las dependencias.
-- Copia el código de la aplicación.
-- Ejecuta la aplicación mediante `npm start`.
+- Copia el cÃ³digo de la aplicaciÃ³n.
+- Ejecuta la aplicaciÃ³n mediante `npm start`.
 
 #### `.dockerignore`
 
@@ -564,7 +564,7 @@ Entre los archivos y directorios excluidos se encuentran:
 
 #### Construir la imagen
 
-Desde la raíz del proyecto:
+Desde la raÃ­z del proyecto:
 
 ```
 docker build -t shipnow .
@@ -582,7 +582,7 @@ La API queda disponible en:
 
 http://localhost:8080
 
-### Probar la aplicación dentro del contenedor
+### Probar la aplicaciÃ³n dentro del contenedor
 
 #### API
 
@@ -608,18 +608,18 @@ http://localhost:8080/api/users
 
 El contenedor fue probado correctamente verificando:
 
-- Inicio de la aplicación.
-- Conexión a MongoDB.
+- Inicio de la aplicaciÃ³n.
+- ConexiÃ³n a MongoDB.
 - Servidor escuchando en el puerto `8080`.
 - Health check.
 - Swagger.
 - Endpoint principal.
 
-### Ejecución con Docker Compose
+### EjecuciÃ³n con Docker Compose
 
 Docker Compose permite levantar la API junto con MongoDB.
 
-Desde la raíz del proyecto:
+Desde la raÃ­z del proyecto:
 
 ```
 docker compose up -d --build
@@ -627,7 +627,7 @@ docker compose up -d --build
 
 ## Archivos que no deben subirse al repositorio
 
-Los siguientes archivos y directorios contienen información sensible, generada o temporal:
+Los siguientes archivos y directorios contienen informaciÃ³n sensible, generada o temporal:
 
 - `.env`
 - `.env.*`
@@ -640,7 +640,7 @@ Los siguientes archivos y directorios contienen información sensible, generada 
 - `*.tmp`
 - `*.temp`
 
-Los archivos `.env` pueden contener credenciales o información específica del entorno y deben mantenerse fuera del repositorio.
+Los archivos `.env` pueden contener credenciales o informaciÃ³n especÃ­fica del entorno y deben mantenerse fuera del repositorio.
 
 ## Logs y uploads
 
@@ -648,7 +648,7 @@ Los archivos `.env` pueden contener credenciales o información específica del 
 
 Los logs se generan mediante Winston.
 
-Los errores se almacenan mediante rotación diaria:
+Los errores se almacenan mediante rotaciÃ³n diaria:
 
 ```text
 logs/error-YYYY-MM-DD.log
@@ -673,50 +673,50 @@ Los uploads generados no se incluyen en la imagen Docker.
 La suite funcional completa se ejecuta correctamente:
 
 ```text
-30 passing
+33 passing
 ```
 
-La aplicación también fue ejecutada mediante Docker verificando correctamente:
+La aplicaciÃ³n tambiÃ©n fue ejecutada mediante Docker verificando correctamente:
 
-- Conexión a MongoDB establecida.
+- ConexiÃ³n a MongoDB establecida.
 - Servidor ShipNow escuchando en el puerto 8080.
 - Health Check funcionando correctamente desde el contenedor.
 - Acceso a Swagger/OpenAPI.
 - Acceso a los endpoints principales.
 
-## Entrega Final — ShipNow API
+## Entrega Final â€” ShipNow API
 
-En esta entrega final se integran las funcionalidades desarrolladas durante los distintos módulos del proyecto:
+En esta entrega final se integran las funcionalidades desarrolladas durante los distintos mÃ³dulos del proyecto:
 
 - Arquitectura por capas.
-- Gestión de usuarios.
-- Gestión de productos.
-- Gestión de pedidos.
-- Gestión de entregas.
-- Generación de datos simulados con Faker.
+- GestiÃ³n de usuarios.
+- GestiÃ³n de productos.
+- GestiÃ³n de pedidos.
+- GestiÃ³n de entregas.
+- GeneraciÃ³n de datos simulados con Faker.
 - Persistencia de mocks en MongoDB.
 - Manejo centralizado de errores.
 - Errores personalizados y diccionario de errores.
 - Logging profesional con Winston.
-- Documentación interactiva mediante Swagger/OpenAPI.
+- DocumentaciÃ³n interactiva mediante Swagger/OpenAPI.
 - Testing funcional automatizado con Mocha, Chai y Supertest.
-- Paginación y límites en los listados.
+- PaginaciÃ³n y lÃ­mites en los listados.
 - Carga de documentos de usuarios.
 - Carga de comprobantes de entregas.
-- Validación de archivos y tipos MIME.
-- Validación de variables de entorno.
+- ValidaciÃ³n de archivos y tipos MIME.
+- ValidaciÃ³n de variables de entorno.
 - Health Check.
-- Separación de entornos de desarrollo y testing.
-- Configuración mediante archivos `.env`.
+- SeparaciÃ³n de entornos de desarrollo y testing.
+- ConfiguraciÃ³n mediante archivos `.env`.
 - Dockerfile.
 - `.dockerignore`.
-- Ejecución de la API mediante Docker.
-- Ejecución conjunta de la API y MongoDB mediante Docker Compose.
-- Protección de archivos sensibles, logs y uploads.
+- EjecuciÃ³n de la API mediante Docker.
+- EjecuciÃ³n conjunta de la API y MongoDB mediante Docker Compose.
+- ProtecciÃ³n de archivos sensibles, logs y uploads.
 
 ### Accesos principales
 
-Con la aplicación ejecutándose localmente:
+Con la aplicaciÃ³n ejecutÃ¡ndose localmente:
 
 - API: `http://localhost:8080`
 - Health Check: `http://localhost:8080/health`
@@ -726,4 +726,6 @@ Con la aplicación ejecutándose localmente:
 
 Sheila Magali Chiesa
 
-Proyecto final — ShipNow API
+Proyecto final â€” ShipNow API
+
+
