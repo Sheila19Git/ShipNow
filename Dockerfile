@@ -1,4 +1,4 @@
-# Etapa 1: instalación de dependencias
+﻿# Etapa 1: instalación de dependencias
 FROM node:20-alpine AS dependencies
 
 WORKDIR /app
