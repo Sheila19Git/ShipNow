@@ -218,6 +218,39 @@ describe("ShipNow API", () => {
         );
     });
 
+
+        it("PUT /api/orders/:id debería actualizar un pedido", async () => {
+        const createdOrder = await Order.create({
+            user: new mongoose.Types.ObjectId(),
+            products: [
+                {
+                    product: new mongoose.Types.ObjectId(),
+                    quantity: 1
+                }
+            ],
+            priority: "MEDIUM"
+        });
+
+        const response = await request(app)
+            .put(`/api/orders/${createdOrder._id}`)
+            .send({
+                priority: "HIGH"
+            });
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property("status", "success");
+
+        expect(response.body).to.have.property(
+            "message",
+            "Pedido actualizado correctamente"
+        );
+
+        expect(response.body.payload).to.have.property(
+            "priority",
+            "HIGH"
+        );
+    });
+
     it("GET /api/orders/:id debería consultar un pedido", async () => {
         const createdOrder = await Order.create({
             user: new mongoose.Types.ObjectId(),
