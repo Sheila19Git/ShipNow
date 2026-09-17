@@ -105,11 +105,13 @@ describe("ShipNow API", () => {
         );
     });
 
-    it("GET /api/ruta-inexistente debería devolver 404", async () => {
+      it("GET /api/ruta-inexistente debería devolver 404", async () => {
         const response = await request(app).get("/api/ruta-inexistente");
 
         expect(response.status).to.equal(404);
-        expect(response.body).to.deep.equal({});
+        expect(response.body.status).to.equal("error");
+        expect(response.body.code).to.equal("ROUTE_NOT_FOUND");
+        expect(response.body.message).to.equal("Ruta no encontrada");
     });
 
     it("GET /api/users debería obtener la lista de usuarios", async () => {

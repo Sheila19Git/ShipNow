@@ -1,36 +1,24 @@
 const express = require("express");
-
 const swaggerUi = require("swagger-ui-express");
-
 const swaggerSpec = require("./config/swagger/swagger");
 
 const productRoutes = require("./routes/products.routes");
-
 const userRoutes = require("./routes/users.routes");
-
 const orderRoutes = require("./routes/orders.routes");
-
 const deliveryRoutes = require("./routes/deliveries.routes");
-
 const mockRoutes = require("./routes/mocks.routes");
-
 const loggerRoutes = require("./routes/logger.routes");
-
 const healthRoutes = require("./routes/health.routes");
 
 const errorMiddleware = require("./errors/error.middleware");
-
 
 const app = express();
 
 app.use(express.json());
 
 app.use("/api/products", productRoutes);
-
 app.use("/api/users", userRoutes);
-
 app.use("/api/orders", orderRoutes);
-
 app.use("/api/deliveries", deliveryRoutes);
 
 app.use("/health", healthRoutes);
@@ -51,6 +39,16 @@ app.get("/", (req, res) => {
   res.send("ShipNow API funcionando");
 });
 
+// Middleware para rutas inexistentes
+app.use((req, res) => {
+  res.status(404).json({
+    status: "error",
+    code: "ROUTE_NOT_FOUND",
+    message: "Ruta no encontrada",
+  });
+});
+
+// Middleware global de errores
 app.use(errorMiddleware);
 
 module.exports = app;
