@@ -8,21 +8,21 @@ API REST desarrollada con *Node.js, Express y MongoDB*, construida con arquitect
 
 \- MongoDB Atlas / Mongoose
 
-\- Faker â€” generaciÃ³n de datos simulados
+\- Faker — Generación de datos simulados
 
-\- Multer â€” carga y gestiÃ³n de archivos
+\- Multer — carga y gestión de archivos
 
-\- Winston / Winston Daily Rotate File â€” logging
+\- Winston / Winston Daily Rotate File — logging
 
-\- Swagger UI + JSDoc â€” documentaciÃ³n interactiva
+\- Swagger UI + JSDoc — documentaciÃ³n interactiva
 
-\- Mocha â€” ejecuciÃ³n de tests
+\- Mocha — ejecuciÃ³n de tests
 
-\- Chai â€” aserciones
+\- Chai — aserciones
 
-\- Supertest â€” pruebas HTTP
+\- Supertest — pruebas HTTP
 
-\- Cross-env â€” configuraciÃ³n del entorno de testing
+\- Cross-env — configuraciÃ³n del entorno de testing
 
 \- Dotenv
 
@@ -225,9 +225,9 @@ La carga de archivos estÃ¡ limitada a un tamaÃ±o mÃ¡ximo de **5 MB** y res
 
 Los errores relacionados con archivos son procesados mediante el middleware centralizado.
 
-## MÃ³dulo 2 â€” Mocking
+## MÃ³dulo 2 — Mocking
 
-GeneraciÃ³n de datos simulados con Faker, con opciÃ³n de persistirlos en MongoDB.
+Generación de datos simulados con Faker, con opciÃ³n de persistirlos en MongoDB.
 
 | MÃ©todo | Endpoint | DescripciÃ³n |
 |---|---|---|
@@ -239,7 +239,7 @@ GeneraciÃ³n de datos simulados con Faker, con opciÃ³n de persistirlos en Mon
 | POST | `/api/mocks/seed?qty=10` | Inserta datos mock completos en MongoDB |
 
 El parÃ¡metro `qty` representa la cantidad de datos a generar o insertar.
-## MÃ³dulo 3 â€” Manejo de errores
+## MÃ³dulo 3 — Manejo de errores
 
 Sistema centralizado con errores personalizados, diccionario de errores y middleware global.
 
@@ -259,7 +259,7 @@ Sistema centralizado con errores personalizados, diccionario de errores y middle
 - `INVALID_FILE_FIELD`
 - `INTERNAL_SERVER_ERROR`
 
-## MÃ³dulo 4 â€” Logging
+## MÃ³dulo 4 — Logging
 
 Sistema de logging implementado con Winston.
 
@@ -289,7 +289,7 @@ GET /api/logger/test
 ```
 Este endpoint se utiliza como herramienta de validaciÃ³n del sistema de logging y no representa una funcionalidad de negocio.
 
-## MÃ³dulo 5 â€” DocumentaciÃ³n con Swagger
+## MÃ³dulo 5 — DocumentaciÃ³n con Swagger
 
 La documentaciÃ³n interactiva de la API se encuentra disponible en:
 
@@ -313,7 +313,7 @@ La documentaciÃ³n incluye:
 - Respuestas exitosas.
 - Respuestas de error.
 
-## MÃ³dulo 6 â€” Testing funcional
+## MÃ³dulo 6 — Testing funcional
 
 El proyecto incorpora una suite de tests funcionales automatizados utilizando **Mocha**, **Chai** y **Supertest**.
 
@@ -360,7 +360,7 @@ La suite valida:
 - Usuarios.
 - Pedidos.
 - Entregas.
-- GeneraciÃ³n de mocks.
+- Generación de mocks.
 - InserciÃ³n de usuarios mock.
 - InserciÃ³n de datos mock completos.
 - Cantidades invÃ¡lidas de mocks.
@@ -376,7 +376,7 @@ La suite valida:
 
 Los tests verifican tanto el status HTTP como la estructura y las propiedades importantes del body.
 
-## MÃ³dulo 7 â€” Carga de archivos, documentos y comprobantes
+## MÃ³dulo 7 — Carga de archivos, documentos y comprobantes
 
 Se implementÃ³ un sistema de carga de archivos utilizando Multer.
 
@@ -478,7 +478,7 @@ TambiÃ©n se controlan:
 - Campos de archivo no permitidos.
 - Archivos faltantes.
 
-## MÃ³dulo 8 â€” Performance, escalabilidad y Docker
+## MÃ³dulo 8 — Performance, escalabilidad y Docker
 
 En este mÃ³dulo se preparÃ³ ShipNow para una ejecuciÃ³n mÃ¡s estable y cercana a un entorno de producciÃ³n.
 
@@ -684,16 +684,16 @@ La aplicaciÃ³n tambiÃ©n fue ejecutada mediante Docker verificando correctame
 - Acceso a Swagger/OpenAPI.
 - Acceso a los endpoints principales.
 
-## Entrega Final â€” ShipNow API
+## Entrega Final — ShipNow API
 
 En esta entrega final se integran las funcionalidades desarrolladas durante los distintos mÃ³dulos del proyecto:
 
 - Arquitectura por capas.
-- GestiÃ³n de usuarios.
-- GestiÃ³n de productos.
-- GestiÃ³n de pedidos.
-- GestiÃ³n de entregas.
-- GeneraciÃ³n de datos simulados con Faker.
+- gestión de usuarios.
+- gestión de productos.
+- gestión de pedidos.
+- gestión de entregas.
+- Generación de datos simulados con Faker.
 - Persistencia de mocks en MongoDB.
 - Manejo centralizado de errores.
 - Errores personalizados y diccionario de errores.
@@ -726,6 +726,10 @@ Con la aplicaciÃ³n ejecutÃ¡ndose localmente:
 
 Sheila Magali Chiesa
 
-Proyecto final â€” ShipNow API
+Proyecto final — ShipNow API
+
+
+
+
 
 
