@@ -337,7 +337,7 @@ El archivo `.env.test` se encuentra incluido en `.gitignore` y no debe subirse a
 npm test
 ```
 
-El script configura automÃ¡ticamente:
+El script configura automáticamente:
 
 ```text
 NODE_ENV=test
@@ -727,6 +727,7 @@ Con la aplicaciÃ³n ejecutÃ¡ndose localmente:
 Sheila Magali Chiesa
 
 Proyecto final — ShipNow API
+
 
 
 
